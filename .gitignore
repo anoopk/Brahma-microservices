@@ -1,0 +1,5 @@
+*.log
+*.txt
+node_modules
+*.data
+config.json

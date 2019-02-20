@@ -1,0 +1,44 @@
+{
+  "name": "@anoopk/review-analysis",
+  "version": "1.0.0",
+  "description": "Analyse public vehicle reviews via ML (Aylien) and save the data into a Document Store (Mongo). Supports Classifications and Document and Aspect level Sentiment Analysis.",
+  "main": "main.js",
+  "dependencies": {
+    "aylien_textapi": "^0.7.0",
+    "bst": "^0.0.1",
+    "gherkin-easy": "^1.2.0",
+    "jest": "^24.1.0",
+    "lambda-local": "^1.5.2",
+    "line-reader": "^0.4.0",
+    "lodash": "^4.17.11",
+    "mongo": "^0.1.0",
+    "mongodb": "^3.1.13",
+    "package.json": "^2.0.1",
+    "request": "^2.88.0"
+  },
+  "devDependencies": {
+    "cucumber": "^5.1.0"
+  },
+  "scripts": {
+    {"test": "./node_modules/.bin/cucumber-js"}
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anoopk/Brahma.git"
+  },
+  "keywords": [
+    "Aylien",
+    "MongoDB",
+    "NLP",
+    "Textual",
+    "Analysis",
+    "Auto",
+    "Reviews"
+  ],
+  "author": "Strange Designs",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/anoopk/Brahma/issues"
+  },
+  "homepage": "https://github.com/anoopk/Brahma#readme"
+}
