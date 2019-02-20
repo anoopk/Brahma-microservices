@@ -1,0 +1,24 @@
+{
+	"transform": {
+	"url":"https://www.autoexpress.co.uk/hyundai/i10/88290/hyundai-i10-se-long-term-test-review",
+	"organization":"Hyundai",
+	"product":"i10"
+	},
+	"strangedesigns": {
+		"serviceproviders":{
+			"credentials":{
+				"application_id": "3e37c5de",
+				"application_key": "69a0c0f40f7137b9e51eed2f06df37b9"
+			}
+			
+			
+			
+		},
+		"watch": {
+			"organization":["Maruti", "Hyundai"],
+			"product":["Wagon R", "i10", "i20"]
+		},
+		"organization": "Maruti",
+		"product": "WagonR"
+	}
+}
