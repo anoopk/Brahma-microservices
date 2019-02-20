@@ -1,6 +1,6 @@
 'use strict'
 
-const sm = require('./transform.js')
+const sm = require('./mongo.js')
 sm.start({}, {}, (err, result) => {
 		console.log(result);
 });
