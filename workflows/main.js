@@ -1,6 +1,6 @@
 'use strict'
 
-const sm = require('./mongo.js')
+const sm = require('./step')
 sm.start({}, {}, (err, result) => {
 		console.log(result);
 });
