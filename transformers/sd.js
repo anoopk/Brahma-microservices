@@ -15,6 +15,21 @@ function createDBSnapshots(results, urlobj, watch){
 }
 
 exports.handler = async(event, context) => { 
+// Create S3 service object
+	const AWS = require('aws-sdk');
+	var s3 = new AWS.S3({apiVersion: '2006-03-01'});
+	// Call S3 to list the buckets
+	var uploadParams = {};
+	uploadParams.Bucket = "transformer-dev-serverlessdeploymentbucket-12t9niv5yoqyl";
+	uploadParams.Body = "Something,anything";
+	uploadParams.Key = "Something,anything";
+	s3.putObject(uploadParams, function (err, data) {
+	  if (err) {
+		console.log("Error", err);
+	  } if (data) {
+		console.log("Upload Success", data);
+	  }
+	});
 	var infoObj = event.transform;
 	var ai = new aylien(event.strangedesigns.serviceproviders.credentials, infoObj);		
 	var aiPABS = ai.AnalyseABS();			
@@ -22,19 +37,21 @@ exports.handler = async(event, context) => {
 	var snapshots = {};
 	await Promise.all([aiPABS, aiP]).then(function(results){
 		console.log("Aylienized wiki entry for ", infoObj);
-		snapshots = createDBSnapshots(results, infoObj, event.strangedesigns.watch);		
+		snapshots = createDBSnapshots(results, infoObj, event.strangedesigns.watch);
 	});
-	const AWS = require('aws-sdk');
-	var s3 = new AWS.S3();
-		var params = {
-			Bucket : "arn:aws:s3:::aggregators-dev-serverlessdeploymentbucket-pu393bpbga30",
-			Key : "Snapshots",
-			Body : JSON.stringify(snapshots)
-		}
-		s3.putObject(params, function(err, data) {
-		  if (err) console.log(err, err.stack); // an error occurred
-		  else     console.log("Snapshots uploaded to bucket");           // successful response
-		});		
-	return "arn:aws:s3:::aggregators-dev-serverlessdeploymentbucket-pu393bpbga30";
+	var params = {
+		Bucket : "transformer-dev-serverlessdeploymentbucket-12t9niv5yoqyl",
+		Key : "Snapshots",
+		Body : JSON.stringify(snapshots)
+	}		
+	console.log("Putting", JSON.stringify(snapshots));
+	s3.putObject(params, function(err, data) , function (err, data) {
+	  if (err) {
+		console.log("Error", err);
+	  } if (data) {
+		console.log("Upload Success", data);
+	  }
+	});
+	return "tada";
 }
 

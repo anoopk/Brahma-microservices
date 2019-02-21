@@ -15,7 +15,8 @@
     "mongo": "^0.1.0",
     "mongodb": "^3.1.13",
     "package.json": "^2.0.1",
-    "request": "^2.88.0"
+    "request": "^2.88.0",
+    "serverless-secrets-plugin": "^0.1.0"
   },
   "devDependencies": {
     "cucumber": "^5.1.0"
