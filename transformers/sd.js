@@ -22,8 +22,19 @@ exports.handler = async(event, context) => {
 	var snapshots = {};
 	await Promise.all([aiPABS, aiP]).then(function(results){
 		console.log("Aylienized wiki entry for ", infoObj);
-		snapshots = createDBSnapshots(results, infoObj, event.watch);
+		snapshots = createDBSnapshots(results, infoObj, event.strangedesigns.watch);		
 	});
-	return snapshots;
+	const AWS = require('aws-sdk');
+	var s3 = new AWS.S3();
+		var params = {
+			Bucket : "arn:aws:s3:::aggregators-dev-serverlessdeploymentbucket-pu393bpbga30",
+			Key : "Snapshots",
+			Body : JSON.stringify(snapshots)
+		}
+		s3.putObject(params, function(err, data) {
+		  if (err) console.log(err, err.stack); // an error occurred
+		  else     console.log("Snapshots uploaded to bucket");           // successful response
+		});		
+	return "arn:aws:s3:::aggregators-dev-serverlessdeploymentbucket-pu393bpbga30";
 }
 

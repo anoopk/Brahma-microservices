@@ -7,7 +7,7 @@ module.exports.start = (event, context, callback) => {
   const input = JSON.stringify(require("./config.json"));
   const stateMachineArn = "arn:aws:states:us-east-1:078421894314:stateMachine:Transform";
   const params = {
-	input, 
+	input.services, 
     stateMachineArn
 	}
   console.log(params);
