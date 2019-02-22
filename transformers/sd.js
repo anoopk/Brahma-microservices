@@ -1,5 +1,5 @@
 'use strict';
-var aylien = require("aylien");
+var aylien = require("./aylien");
 
 function createDBSnapshots(results, urlobj, watch){
 	var snapshots = {};
@@ -15,43 +15,25 @@ function createDBSnapshots(results, urlobj, watch){
 }
 
 exports.handler = async(event, context) => { 
-// Create S3 service object
-	const AWS = require('aws-sdk');
-	var s3 = new AWS.S3({apiVersion: '2006-03-01'});
-	// Call S3 to list the buckets
-	var uploadParams = {};
-	uploadParams.Bucket = "transformer-dev-serverlessdeploymentbucket-12t9niv5yoqyl";
-	uploadParams.Body = "Something,anything";
-	uploadParams.Key = "Something,anything";
-	s3.putObject(uploadParams, function (err, data) {
-	  if (err) {
-		console.log("Error", err);
-	  } if (data) {
-		console.log("Upload Success", data);
-	  }
-	});
 	var infoObj = event.transform;
+	
 	var ai = new aylien(event.strangedesigns.serviceproviders.credentials, infoObj);		
 	var aiPABS = ai.AnalyseABS();			
 	var aiP = ai.Analyse();
 	var snapshots = {};
-	await Promise.all([aiPABS, aiP]).then(function(results){
-		console.log("Aylienized wiki entry for ", infoObj);
-		snapshots = createDBSnapshots(results, infoObj, event.strangedesigns.watch);
-	});
 	var params = {
 		Bucket : "transformer-dev-serverlessdeploymentbucket-12t9niv5yoqyl",
-		Key : "Snapshots",
-		Body : JSON.stringify(snapshots)
-	}		
-	console.log("Putting", JSON.stringify(snapshots));
-	s3.putObject(params, function(err, data) , function (err, data) {
-	  if (err) {
-		console.log("Error", err);
-	  } if (data) {
-		console.log("Upload Success", data);
-	  }
-	});
-	return "tada";
+		Key : "Snapshots"
+	}			
+	await Promise.all([aiPABS, aiP]).then(function(results){
+		//Send extra data to s3 bucket
+		delete results[0].text;
+		delete results[0].aspects;
+		delete results[0].sentences;		
+		delete results[1].text;
+		console.log("Aylienized wiki entry for ", infoObj);
+		snapshots = createDBSnapshots(results, infoObj, event.strangedesigns.watch);
+	});	
+	return snapshots;
 }
 

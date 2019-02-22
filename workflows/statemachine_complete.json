@@ -1,10 +1,12 @@
 {
-  "Comment": "A single step workflow that Aylienizes URL text and transforms the output",
-  "StartAt": "Transform",
+  "Comment": "A workflow that Aylienizes URL text and transforms the output",
+  "StartAt": "AylienizeURL",
   "States": {
-    "Transform": {
+    "AylienizeURL": {
       "Type": "Task",
-      "InputPath":"$.transformers", 
+      "InputPath":"$.services.transformers", 
+      "ResultPath":"$.services.storers.mongodb.snapshots", 
+      "OutputPath":"$", 
       "Resource": "arn:aws:lambda:us-east-1:078421894314:function:transformer-dev-transform",
       "Next": "Together"
     },
@@ -12,27 +14,30 @@
       "Type": "Parallel",
       "Branches": [
 			{
-			 "StartAt": "Store",
+			 "StartAt": "MoveAylienDataToMongo",
 				 "States":{
-				   "Store":{
+				   "MoveAylienDataToMongo":{
 					 "Type": "Task",
+                     "InputPath":"$.services.storers.mongodb", 
 					 "Resource":
-					   " arn:aws:lambda:us-east-1:078421894314:function:storers-dev-store",
+					   "arn:aws:lambda:us-east-1:078421894314:function:storers-dev-store",
 					 "End": true
 				   }  
 				}
 			},
 			{
-			 "StartAt": "Aggregate",
+			 "StartAt": "AggregateDataForUpstreamStatistics",
 			 "States":{
-			   "Aggregate":{
+			   "AggregateDataForUpstreamStatistics":{
 				 "Type": "Task",
+                 "InputPath":"$.services.aggregators",
 				 "Resource":
 				   "arn:aws:lambda:us-east-1:078421894314:function:aggregators-dev-aggregate",
-				 "Next": "StoreAgg"
+				 "Next": "StoreAggregatedData"
 			   },
-			   "StoreAgg":{
+			   "StoreAggregatedData":{
 				 "Type": "Task",
+                 "InputPath":"$.services.storers.mongodb",
 				 "Resource":
 				   "arn:aws:lambda:us-east-1:078421894314:function:storers-dev-store",
 				 "End": true
@@ -42,5 +47,5 @@
 		],
       "End": true
     }
-  }
+  }  
 }
