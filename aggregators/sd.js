@@ -1,4 +1,4 @@
-const mongoConfig = require('./config.json')
+const mongoConfig = require('./config.json').aggregators.strangedesigns
 var MongoClient = require('mongodb').MongoClient
 
 exports.handler = (event, context, callback) => {
@@ -14,19 +14,25 @@ exports.handler = (event, context, callback) => {
 	obj.endpoint = snapshots[2].endpoint;
 	obj.sentiment = snapshots[2].result.polarity_confidence;		
 
-	var database = mongoConfig.db;
+	context.callbackWaitsForEmptyEventLoop = false;
 	MongoClient.connect(mongoConfig.url, { useNewUrlParser: true }, function(err, db) {
 		if (err) throw err;
-		var dbo = db.db(database);
+		var dbo = db.db(mongoConfig.db);
 		var coll = dbo.collection(obj.endpoint);
+		
 		coll.countDocuments().then((count) => {
 			if(0 < count){
 				coll.findOne({"organization":obj.organization, "product": obj.product}, {sort: { reviews: -1 }}, function(err, result) {
 					if (err) throw err;
-					//console.log("Last sentiment object", result);
-					obj.sentiment = ((result.reviews * result.sentiment) + obj.sentiment)/(result.reviews+1);
-					obj.reviews = result.reviews+1;
-					//console.log("Current sentiment object", obj);
+					if(null == result){										
+						obj.reviews = 1;				
+						console.log("Introducing Collection with ", obj);				
+					}
+					else{
+						obj.sentiment = ((result.reviews * result.sentiment) + obj.sentiment)/(result.reviews+1);
+						obj.reviews = result.reviews+1;
+						//console.log("Current sentiment object", obj);
+					}
 				});					
 			}
 			else {
@@ -37,7 +43,7 @@ exports.handler = (event, context, callback) => {
 			db.close();	
 			var snapshots = {};
 			snapshots[0] = obj;
-			callback(snapshots);
+			return snapshots;
 		});
 	});
 }

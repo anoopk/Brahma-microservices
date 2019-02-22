@@ -1,6 +1,6 @@
-
+const event = require('./event.json')
 const sd = require('./sd')
 
-sd.handler({}, {}, function(store, error){
+sd.handler(event, {}, function(store, error){
 	console.log("Gotcha", store);
 });
