@@ -4,8 +4,8 @@
   "States": {
     "AylienizeURL": {
       "Type": "Task",
-      "InputPath":"$.services.transformers", 
-      "ResultPath":"$.services.storers.mongodb.snapshots", 
+      "InputPath":"$", 
+      "ResultPath":"$.snapshots", 
       "OutputPath":"$", 
       "Resource": "arn:aws:lambda:us-east-1:078421894314:function:transformer-dev-transform",
       "Next": "Together"
@@ -18,7 +18,7 @@
 				 "States":{
 				   "MoveAylienDataToMongo":{
 					 "Type": "Task",
-                     "InputPath":"$.services.storers.mongodb", 
+                     "InputPath":"$", 
 					 "Resource":
 					   "arn:aws:lambda:us-east-1:078421894314:function:storers-dev-store",
 					 "End": true
@@ -30,14 +30,15 @@
 			 "States":{
 			   "AggregateDataForUpstreamStatistics":{
 				 "Type": "Task",
-                 "InputPath":"$.services.aggregators",
+                 "InputPath":"$",
+				 "OutputPath":"$",
 				 "Resource":
 				   "arn:aws:lambda:us-east-1:078421894314:function:aggregators-dev-aggregate",
 				 "Next": "StoreAggregatedData"
 			   },
 			   "StoreAggregatedData":{
 				 "Type": "Task",
-                 "InputPath":"$.services.storers.mongodb",
+                 "InputPath":"$",
 				 "Resource":
 				   "arn:aws:lambda:us-east-1:078421894314:function:storers-dev-store",
 				 "End": true

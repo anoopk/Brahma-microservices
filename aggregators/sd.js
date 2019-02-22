@@ -1,9 +1,12 @@
-
-var MongoClient = require('mongodb').MongoClient;
+const mongoConfig = require('./config.json')
+var MongoClient = require('mongodb').MongoClient
 
 exports.handler = (event, context, callback) => {
+	if(null == event){
+		console.log("No snapshots found.");
+	}
+	
 	var snapshots = event.snapshots;
-	var mongoConfig = event;
 	var obj = {};	
 	//To do - look for sentiment snapshot instead of assuming 2
 	obj.organization = snapshots[2].organization;

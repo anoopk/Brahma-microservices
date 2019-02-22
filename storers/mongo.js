@@ -1,3 +1,4 @@
+var config = require('./config.json').storers.mongodb;
 var MongoClient = require('mongodb').MongoClient;
 
 exports.handler = async(event, context) => {
