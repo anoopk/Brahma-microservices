@@ -1,6 +1,6 @@
-const config = require('./config.json')
+const event = require('./event.json')
 const transformer = require('./sd')
 
-transformer.handler(config.transfomers, {}).then(function(store, error){
+transformer.handler(event, {}).then(function(store, error){
 	console.log("Gotcha", store);
 });

@@ -1,5 +1,6 @@
 'use strict';
-var aylien = require("./aylien");
+const config = require("./config.json").transformers;
+const aylien = require("./aylien");
 
 function createDBSnapshots(results, urlobj, watch){
 	var snapshots = {};
@@ -17,7 +18,7 @@ function createDBSnapshots(results, urlobj, watch){
 exports.handler = async(event, context) => { 
 	var infoObj = event.transform;
 	
-	var ai = new aylien(event.strangedesigns.serviceproviders.credentials, infoObj);		
+	var ai = new aylien(config.strangedesigns.serviceproviders.credentials, infoObj);		
 	var aiPABS = ai.AnalyseABS();			
 	var aiP = ai.Analyse();
 	var snapshots = {};
@@ -32,7 +33,7 @@ exports.handler = async(event, context) => {
 		delete results[0].sentences;		
 		delete results[1].text;
 		console.log("Aylienized wiki entry for ", infoObj);
-		snapshots = createDBSnapshots(results, infoObj, event.strangedesigns.watch);
+		snapshots = createDBSnapshots(results, infoObj, config.strangedesigns.watch);
 	});	
 	return snapshots;
 }
