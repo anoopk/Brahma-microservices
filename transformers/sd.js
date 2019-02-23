@@ -30,7 +30,7 @@ exports.handler = async(event, context) => {
 		//Send extra data to s3 bucket
 		delete results[0].text;
 		//delete results[0].aspects;
-		//delete results[0].sentences;		
+		delete results[0].sentences;		
 		delete results[1].text;
 		console.log("Aylienized wiki entry for ", infoObj);
 		snapshots = createDBSnapshots(results, infoObj, config.strangedesigns.watch);
