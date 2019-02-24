@@ -3,32 +3,34 @@
 var mongoConfig = require('./config.json').aggregators.strangedesigns
 var MongoClient = require('mongodb').MongoClient
 
-function aggregateAspects(current, snapshot){
-	//Move anything in the newlist not in the current
-	/*var aspectscurrent = [];
-	current.forEach(function(value){
-		aspectscurrent.push(value.aspect);
-	});
-	
-	var aspectsnew = [];
-	snapshot.forEach(function(value){
-		console.log(value);
-		aspectsnew.push(value.aspect);
-	});
-
-	var j=0;
-	for (var i=0; i < aspectsnew.length; ++i)
-		if (aspectscurrent.indexOf(aspectsnew[i]) != -1){
-			result.aspect = aspectsnew[i];
-			result.aspect.url = "";
-			result.aspect.url
+function aggregateAspects(current, snapshot, url){
+	console.log(url);
+	var retObj = {};
+	retObj.aspects = [];
+	Object.keys(snapshot.aspects).forEach(function(k){
+		var found = false;
+		Object.keys(current.aspects).forEach(function(i){
+			if(current.aspects[i].aspect == snapshot.aspects[k].aspect 
+			&& snapshot.aspects[k].polarity == 'positive' 
+			&& snapshot.aspects[k].aspect_confidence > .5
+			&& snapshot.aspects[k].polarity_confidence > current.aspects[i].sentiment.polarity_confidence){
+				found = true;
+				delete snapshot.aspects[k].aspect;
+				current.aspects[i].sentiment = snapshot.aspects[k];
+				current.aspects[i].sentiment.url = url;
+			}
+		});
+		if(false == found){
+			var aspectObj = {};
+			aspectObj.aspect = snapshot.aspects[k].aspect;
+			delete snapshot.aspects[k].aspect;
+			aspectObj.sentiment = snapshot.aspects[k];
+			aspectObj.sentiment.url = url;
+			retObj.aspects.push(aspectObj);		
 		}
-		else 		
-			current.add(snapshot.aspectsnew[i]);
-		
-	console.log(">>>>>>> ", c);
-	//Aggregate the aspects that exist in both into the current*/
-	return current;
+	});
+	console.log(JSON.stringify(retObj));
+	return retObj;	
 }
 
 exports.handler = (event, context, callback) => {
@@ -37,43 +39,27 @@ exports.handler = (event, context, callback) => {
 	}
 	
 	var snapshot = event;
+	console.log(snapshot);
+	
 	var obj = {};	
-	//To do - look for sentiment snapshot instead of assuming 2
-	obj.organization = snapshot.organization;
-	obj.product = snapshot.product;
-	obj.endpoint = snapshot.endpoint;
-	obj.sentiment = snapshot.result.polarity_confidence;
-
-	//console.log("Aspects ", snapshot.result.aspects);	
 
 	context.callbackWaitsForEmptyEventLoop = false;
 	MongoClient.connect(mongoConfig.url, { useNewUrlParser: true }, function(err, db) {
 		if (err) throw err;
 		var dbo = db.db(mongoConfig.db);
-		var coll = dbo.collection(obj.endpoint);
+		var coll = dbo.collection(snapshot.endpoint);
 		const fs = require('fs');
-		coll.findOne({"organization":obj.organization, "product": obj.product}, {sort: { reviews: -1 }}, function(err, result) {
-			var result = JSON.parse(fs.readFileSync("event.json", 'utf8'));
+		coll.findOne({"organization": obj.organization, "product": obj.product}, {sort: { reviews: -1 }}, function(err, result) {
+			var result = JSON.parse(fs.readFileSync("current.json", 'utf8'));
 			if (err) throw err;
-			if(null == result){										
-				obj.reviews = 1;
-				obj.aspects = snapshot.result.aspects;
-				//console.log("Introducing Collection with ", obj);				
-			}
-			else{
-				delete snapshot.result.aspects[0];
-				delete snapshot.result.aspects[1];
-				delete snapshot.result.aspects[2];
-				delete snapshot.result.aspects[3];
-				
-				obj = aggregateAspects(result[0].result.aspects, snapshot.result.aspects);									
-				//obj.aspects = snapshot.result.aspects;
-				//obj.reviews = result.reviews+1;
-				//console.log("Current sentiment object", obj);				
-			}
+			obj = aggregateAspects(result, snapshot.result, snapshot.url);									
 		});
-		obj.timestamp = { type: Date, default: Date.now};
 		db.close();	
+		//To do - look for sentiment snapshot instead of assuming 2
+		obj.timestamp = { type: Date, default: Date.now};
+		obj.organization = snapshot.organization;
+		obj.product = snapshot.product;
+		obj.endpoint = snapshot.endpoint;
 		
 		var snapshots = {};
 		snapshots[0] = obj;
