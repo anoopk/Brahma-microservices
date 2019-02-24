@@ -11,7 +11,7 @@
 #
 # Happy Coding!
 
-service: aspect # NOTE: update this with your service name
+service: aspector # NOTE: update this with your service name
 
 # You can pin your service to only deploy with a specific Serverless version
 # Check out our docs for more details
@@ -45,6 +45,10 @@ provider:
 #  environment:
 #    variable1: value1
 
+package:
+  include:
+    - node_modules
+
 # you can add packaging information here
 #package:
 #  include:
@@ -55,8 +59,8 @@ provider:
 #    - exclude-me-dir/**
 
 functions:
-  hello:
-    handler: handler.hello
+  aggregator:
+    handler: sd.handler
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
