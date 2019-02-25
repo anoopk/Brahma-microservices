@@ -1,0 +1,31 @@
+{
+  "name": "transformers",
+  "version": "1.0.0",
+  "description": "Used to access Aylien data for a URL and transform it. Currently only the Strange Designs transformer is implemented.",
+  "main": "handler",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anoopk/Brahma-microservices.git"
+  },
+  "keywords": [
+    "Aylien",
+    "Text",
+    "Analysis",
+    "Microservice",
+    "AWS",
+    "Lambda"
+  ],
+  "author": "Strange Designs",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/anoopk/Brahma-microservices/issues"
+  },
+  "homepage": "https://github.com/anoopk/Brahma-microservices#readme",
+  "dependencies": {
+    "aylien_textapi": "^0.7.0",
+    "request": "^2.88.0"
+  }
+}
