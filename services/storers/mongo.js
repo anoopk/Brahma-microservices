@@ -5,20 +5,20 @@ exports.handler = async(event, context) => {
 	if(null == event.snapshots){
 		return "No snapshots found";
 	}
-	console.log(event.snapshots, config);
 	var dbss = event.snapshots;
-	context.callbackWaitsForEmptyEventLoop = false;	
+	//context.callbackWaitsForEmptyEventLoop = false;	
 	MongoClient.connect(config.url, { useNewUrlParser: true }, function(err, db) {
 		if (err) console.log(err);
 		Object.keys(dbss).forEach(function(key){
 		if (err) throw err;
-		console.log("Uploading to collection", dbss[key].endpoint, config.db);
 		var dbo = db.db(config.db);
-		dbo.collection(dbss[key].endpoint).insertOne(dbss[key], function(err, res) {
+		dbo.collection(key).insertOne(dbss[key], function(err, res) {
 			if (err) throw err;
 			db.close();
+			console.log("Uploaded to collection", key, dbss[key]);			
 			});
 		});
+		return;
 	});			
 }
 

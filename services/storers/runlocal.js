@@ -1,6 +1,8 @@
-const config = require('../workflows/config.json')
 const mongo = require('./mongo')
+const fs = require('fs');
 
-mongo.handler(config.services.storers.mongodb, {}).then(function(store, error){
+var event = {};
+event.snapshots = JSON.parse(fs.readFileSync('../snapshots.json', 'utf8'));
+mongo.handler(event, {}).then(function(store, error){
 	console.log("Gotcha", store);
 });

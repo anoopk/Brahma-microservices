@@ -4,13 +4,17 @@ const aylien = require("./aylien");
 
 function createDBSnapshots(results, urlobj, watch){
 	var snapshots = {};
-	var index = 0;
-	snapshots[index++] = {"endpoint" : "abs", "result": results[0], "organization": urlobj.organization, "product": urlobj.product};
+	var snapshot = {};
+	var index = 1;
+	snapshot.metadata = {"organization": urlobj.organization, "product": urlobj.product, "url": urlobj.url};
+	snapshot.result = results[0];
+	snapshots['abs'] = snapshot;
+	
 	Object.keys(results[1].results).forEach(function(key){
-		snapshots[index] = results[1].results[key];
-		snapshots[index].organization = urlobj.organization;
-		snapshots[index].product = urlobj.product;
-		snapshots[index++].url = urlobj.url;
+		var snapshot = {};
+		snapshot.metadata = {"url": urlobj.url, "organization": urlobj.organization, "product": urlobj.product};
+		snapshot.result = results[1].results[key];
+		snapshots[results[1].results[key].endpoint] = snapshot;				
 	});
 	return snapshots;	
 }
