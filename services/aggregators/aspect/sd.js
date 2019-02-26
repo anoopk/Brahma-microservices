@@ -1,69 +1,63 @@
 'use strict';
 
-var mongoConfig = require('./config.json').aggregators.strangedesigns
+var mongoConfig = require('./config.json').mongodb
 var MongoClient = require('mongodb').MongoClient
 
-function aggregateAspects(current, snapshot, url){
-	console.log(url);
+function aggregateAspects(current, snapshot){
 	var retObj = {};
 	retObj.aspects = [];
-	Object.keys(snapshot.aspects).forEach(function(k){
+	
+	Object.keys(snapshot.result.aspects).forEach(function(k){
 		var found = false;
-		Object.keys(current.aspects).forEach(function(i){
-			if(current.aspects[i].aspect == snapshot.aspects[k].aspect 
-			&& snapshot.aspects[k].polarity == 'positive' 
-			&& snapshot.aspects[k].aspect_confidence > .5
-			&& snapshot.aspects[k].polarity_confidence > current.aspects[i].sentiment.polarity_confidence){
-				found = true;
-				delete snapshot.aspects[k].aspect;
-				current.aspects[i].sentiment = snapshot.aspects[k];
-				current.aspects[i].sentiment.url = url;
-			}
-		});
+		if(null != current){
+			Object.keys(current.result.aspects).forEach(function(i){
+				console.log(current.result.aspects[i]);				
+				if(current.result.aspects[i].aspect == snapshot.result.aspects[k].aspect 
+				&& snapshot.result.aspects[k].polarity == 'positive' 
+				&& snapshot.result.aspects[k].aspect_confidence > .5
+				&& snapshot.result.aspects[k].polarity_confidence > current.result.aspects[i].polarity_confidence){
+					found = true;
+					delete snapshot.aspects[k].aspect;
+					current.result.aspects[i].sentiment = snapshot.result.aspects[k];
+					current.result.aspects[i].sentiment.url = snapshot.metadata.url;
+				}
+			});
+		}
 		if(false == found){
 			var aspectObj = {};
-			aspectObj.aspect = snapshot.aspects[k].aspect;
-			delete snapshot.aspects[k].aspect;
-			aspectObj.sentiment = snapshot.aspects[k];
-			aspectObj.sentiment.url = url;
+			aspectObj.aspect = snapshot.result.aspects[k].aspect;
+			delete snapshot.result.aspects[k].aspect;
+			aspectObj.sentiment = snapshot.result.aspects[k];
+			aspectObj.sentiment.url = snapshot.metadata.url;
 			retObj.aspects.push(aspectObj);		
 		}
-	});
-	console.log(JSON.stringify(retObj));
+	});	
 	return retObj;	
 }
 
 exports.handler = (event, context, callback) => {
-	if(null == event){
+	if(null == event.snapshots){
 		console.log("No snapshots found.");
 	}
 	
-	var snapshot = event;
-	console.log(snapshot);
-	
-	var obj = {};	
-
+	var snapshot = event.snapshots;
 	context.callbackWaitsForEmptyEventLoop = false;
 	MongoClient.connect(mongoConfig.url, { useNewUrlParser: true }, function(err, db) {
 		if (err) throw err;
 		var dbo = db.db(mongoConfig.db);
 		var coll = dbo.collection(snapshot.endpoint);
-		const fs = require('fs');
-		coll.findOne({"organization": obj.organization, "product": obj.product}, {sort: { reviews: -1 }}, function(err, result) {
-			var result = JSON.parse(fs.readFileSync("current.json", 'utf8'));
+		coll.findOne({"metadata.organization": snapshot.metadata.organization, "metadata.product": snapshot.metadata.product}, {sort: { reviews: -1 }}, function(err, result) {
 			if (err) throw err;
-			obj = aggregateAspects(result, snapshot.result, snapshot.url);									
+			snapshot = aggregateAspects(result, snapshot);									
 		});
 		db.close();	
-		//To do - look for sentiment snapshot instead of assuming 2
-		obj.timestamp = { type: Date, default: Date.now};
-		obj.organization = snapshot.organization;
-		obj.product = snapshot.product;
-		obj.endpoint = snapshot.endpoint;
+		var retval = {};
+		retval['abs'] = snapshot;
+
+		const fs = require('fs');
+		fs.writeFileSync("../../upstreamAspects.json", JSON.stringify(retval));
 		
-		var snapshots = {};
-		snapshots[0] = obj;
-		return snapshots;
+		return retval;
 	});
 }
 
