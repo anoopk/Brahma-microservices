@@ -11,30 +11,29 @@ exports.handler = (event, context, callback) => {
 	var obj = {"metadata":{}};	
 	
 	//To do - look for sentiment snapshot instead of assuming 2
-	obj.metadata.organization = snapshots.organization;
-	obj.metadata.product = snapshots.product;
+	obj.metadata.organization = snapshots.metadata.organization;
+	obj.metadata.product = snapshots.metadata.product;
 	obj.endpoint = snapshots.endpoint;
 	
 	context.callbackWaitsForEmptyEventLoop = false;
 	MongoClient.connect(mongoConfig.url, { useNewUrlParser: true }, function(err, db) {
 		if (err) throw err;
 		var dbo = db.db(mongoConfig.db);
-		var coll = dbo.collection(obj.endpoint);
+		var coll = dbo.collection('sentiment');
 		
 		coll.findOne({"metadata.organization":obj.organization, "metadata.product": obj.product}, {sort: { reviews: -1 }}, function(err, last) {
 			if (err) throw err;
 			if(null == last){										
 				obj.reviews = 1;				
-				obj.result = result.result;						
+				obj.result = snapshots.result;						
 				console.log("Introducing Collection with ", obj);				
 			}
 			else{
-				obj.result = result.result;						
+				obj.result = last.result;						
 				if(snapshots.result.polarity == 'positive'
-				&& snapshots.result.polarity_confidence > result.result.polarity_confidence){
-					obj.
+				&& snapshots.result.polarity_confidence > last.result.polarity_confidence){
 				};
-				obj.reviews = result.reviews+1;
+				obj.reviews = last.reviews+1;
 			}
 		});
 		obj.timestamp = { type: Date, default: Date.now};
