@@ -40,8 +40,8 @@ exports.handler = (event, context, callback) => {
 		db.close();	
 		var snapshots = {};
 		snapshots['sentiment'] = obj;
-		var fs = require('fs');
-		fs.writeFileSync("../../upstreamSentiment.json", JSON.stringify(snapshots));
+		//var fs = require('fs');
+		//fs.writeFileSync("../../upstreamSentiment.json", JSON.stringify(snapshots));
 		return snapshots;
 	});
 }

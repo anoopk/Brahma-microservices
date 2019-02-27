@@ -26,7 +26,7 @@
 				}
 			},
 			{
-			 "StartAt": "AggregateAspectDataForUpstreamStatistics",
+			 "StartAt": "AggregateSentimentForUpstreamStatistics",
 				 "States":{
 				   "AggregateSentimentForUpstreamStatistics":{
 					 "Type": "Task",
@@ -37,15 +37,6 @@
 					   "arn:aws:lambda:us-east-1:078421894314:function:sentimentors-dev-aggregator",
 					 "Next": "StoreAggregatedData"
 				   }, 
-				   "AggregateAspectDataForUpstreamStatistics":{
-					 "Type": "Task",
-					 "InputPath":"$.snapshots.abs",
-					 "ResultPath":"$.snapshots",				 
-					 "OutputPath":"$",
-					 "Resource":
-					 "arn:aws:lambda:us-east-1:078421894314:function:aspector-dev-aggregator",
-					 "Next": "AggregateSentimentForUpstreamStatistics"
-				   },
 				   "StoreAggregatedData":{
 					 "Type": "Task",
 					 "InputPath":"$",
