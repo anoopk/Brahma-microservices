@@ -14,14 +14,14 @@ exports.handler = async(event, context) => {
 			console.log("Local copies of data made.");
 		});
 	
-		ex.handler({"snapshots": snapshots.sentiment}, config.aggregators.sentiment, (results) => {
-			console.log(config.aggregators.sentiment.message);
-		});
+		//ex.handler({"snapshots": snapshots.sentiment}, config.aggregators.sentiment, (results) => {
+		//	console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>  ", result);			
+		//});
 		
 		ex.handler({"snapshots": snapshots.abs}, config.aggregators.aspect, (results) => {
 			console.log(config.aggregators.aspect.message);
 		});
-		
+		console.log("tsts up");
 		//var mongo = require('../services/storers/mongo');
 		//config.aggregators.strangedesigns.snapshots = result;
 		//config.aggregators.strangedesigns.db = config.storers.mongodb.databases.aggregate;
