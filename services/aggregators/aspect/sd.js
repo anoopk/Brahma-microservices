@@ -39,13 +39,12 @@ exports.handler = (event, context, callback) => {
 	if(null == event.snapshots){
 		console.log("No snapshots found.");
 	}
-	
 	var snapshot = event.snapshots;
 	context.callbackWaitsForEmptyEventLoop = false;
 	MongoClient.connect(mongoConfig.url, { useNewUrlParser: true }, function(err, db) {
 		if (err) throw err;
 		var dbo = db.db(mongoConfig.db);
-		var coll = dbo.collection(snapshot.endpoint);
+		var coll = dbo.collection('abs');
 		coll.findOne({"metadata.organization": snapshot.metadata.organization, "metadata.product": snapshot.metadata.product}, {sort: { reviews: -1 }}, function(err, result) {
 			if (err) throw err;
 			snapshot = aggregateAspects(result, snapshot);									
@@ -53,7 +52,6 @@ exports.handler = (event, context, callback) => {
 		db.close();	
 		var retval = {};
 		retval['abs'] = snapshot;
-
 		const fs = require('fs');
 		fs.writeFileSync("../../upstreamAspects.json", JSON.stringify(retval));
 		

@@ -15,7 +15,7 @@ exports.handler = async(event, context) => {
 		dbo.collection(key).insertOne(dbss[key], function(err, res) {
 			if (err) throw err;
 			db.close();
-			console.log("Uploaded to collection", key, dbss[key]);			
+			//console.log("Uploaded to collection", key, dbss[key]);			
 			});
 		});
 		return;

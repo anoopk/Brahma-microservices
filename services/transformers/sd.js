@@ -20,7 +20,7 @@ function createDBSnapshots(results, urlobj, watch){
 }
 
 exports.handler = async(event, context) => { 
-	var infoObj = event.transform;
+	var infoObj = event;
 	
 	var ai = new aylien(config.strangedesigns.serviceproviders.credentials, infoObj);		
 	var aiPABS = ai.AnalyseABS();			

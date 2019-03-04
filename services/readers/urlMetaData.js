@@ -1,6 +1,7 @@
 var lr = require('line-reader');
 
-function nextUrl(fileName, aiConfig, callback){
+function nextUrl(fileName, {}, callback){
+	console.log(fileName);
 	lr.eachLine(fileName, function(url, last){
 		var data = url.split(" ");
 		var infoObj = {};

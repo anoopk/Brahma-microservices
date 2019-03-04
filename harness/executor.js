@@ -1,10 +1,10 @@
 const lambdaLocal = require('lambda-local');
 
 exports.handler = async(event, context) => {
-	if(event.lambdaImport){
-		const ex = require(event.lambdaPath);
+	if(context.lambdaImport != null && context.lambdaImport){
+		const ex = require(context.lambdaPath);
 		var snapshots = {};
-		await ex.handler(event, context).then(function(results, err){
+		await ex.handler(event, {}).then(function(results, err){
 			if(err)console.log("Error ", err);
 			console.log(event.message);
 			snapshots = results;
@@ -12,14 +12,14 @@ exports.handler = async(event, context) => {
 		return snapshots;
 	};		
 	
-	if(event.lambdaLocal){
+	if(context.lambdaLocal != null && context.lambdaLocal){
 		await lambdaLocal.execute({
 			event: event,
 			context: context,
-			lambdaPath: event.lambdaPath,
-			timeoutMs: event.timeOut
+			lambdaPath: context.lambdaPath,
+			timeoutMs: 15000
 		}).then(function(done) {
-			console.log(event.message);
+			console.log(context.message);
 		});	
 	}
 }

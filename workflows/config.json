@@ -32,6 +32,9 @@
 				"organization": "Maruti",
 				"product": "WagonR"
 			  }
+			"lambdaPath": "../services/transformers/mongo",
+			"lambdaLocal": true,
+			"message": "Aylienization complete."				  
 		},
 		"aggregators": {
 			"strangedesigns": {
@@ -46,7 +49,7 @@
 					"wiki":"Wiki",
 					"aggregate": "Statistics"
 				},
-				"lambdaPath": "./lib/Stores/mongo",
+				"lambdaPath": "../services/storers/mongo",
 				"lambdaLocal": true,
 				"message": "Mongoisation complete."	
 			},
