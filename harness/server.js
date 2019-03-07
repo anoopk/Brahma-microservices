@@ -16,12 +16,10 @@ exports.handler = async(event, context) => {
 		
 		const fs = require('fs');	
 		ex.handler({"snapshots": snapshots.sentiment}, config.aggregators.sentiment, (results) => {
-			console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ", results);
 			fs.writeFileSync("./upstreamSentiments.json", JSON.stringify(results));								
 		});
 		
 		ex.handler({"snapshots": snapshots.abs}, config.aggregators.aspect, (results) => {
-			console.log("jsdfvbsdfvsbdf");
 			fs.writeFileSync("./upstreamAspects.json", JSON.stringify(results));								
 		});
 		//var mongo = require('../services/storers/mongo');
