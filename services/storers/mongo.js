@@ -7,18 +7,20 @@ exports.handler = async(event, context) => {
 	}
 	var dbss = event.snapshots;
 	//context.callbackWaitsForEmptyEventLoop = false;	
-	MongoClient.connect(config.url, { useNewUrlParser: true }, function(err, db) {
-		if (err) console.log(err);
-		Object.keys(dbss).forEach(function(key){
-		if (err) throw err;
-		var dbo = db.db(config.db);
-		dbo.collection(key).insertOne(dbss[key], function(err, res) {
+	try{
+		await MongoClient.connect(config.url, { useNewUrlParser: true }, (function(err, client){
+			const dbo = client.db(config.db);			
+			Object.keys(dbss).forEach(function(key){
 			if (err) throw err;
-			db.close();
-			//console.log("Uploaded to collection", key, dbss[key]);			
+			dbo.collection(key).insertOne(dbss[key], function(err, res) {
+				if (err) throw err;
+				db.close();
+				});
 			});
-		});
-		return;
-	});			
+		}));
+	}
+	catch (err){
+		console.log(err);
+	}
 }
 

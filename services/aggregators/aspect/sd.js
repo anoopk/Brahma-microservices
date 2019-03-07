@@ -52,8 +52,8 @@ exports.handler = async (event, context, callback) => {
 		});
 		db.close();	
 		retval['abs'] = snapshot;
+		callback(retval);
 	});
-	return retval; 	
 }
 
 
