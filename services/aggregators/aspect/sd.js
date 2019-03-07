@@ -39,10 +39,10 @@ exports.handler = async (event, context, callback) => {
 	if(null == event.snapshots){
 		console.log("No snapshots found.");
 	}
+	var retval = {};	
 	var snapshot = event.snapshots;
 	context.callbackWaitsForEmptyEventLoop = false;
 	MongoClient.connect(mongoConfig.url, { useNewUrlParser: true }, function(err, db) {
-		console.log(">>>>>>>>>>>>>>>>>>>>>>     Inside");
 		if (err) throw err;
 		var dbo = db.db(mongoConfig.db);
 		var coll = dbo.collection('abs');
@@ -51,12 +51,9 @@ exports.handler = async (event, context, callback) => {
 			snapshot = aggregateAspects(result, snapshot);									
 		});
 		db.close();	
-		var retval = {};
 		retval['abs'] = snapshot;
-		const fs = require('fs');
-		fs.writeFileSync("./upstreamAspects.json", JSON.stringify(retval));		
-		return retval; 
 	});
+	return retval; 	
 }
 
 

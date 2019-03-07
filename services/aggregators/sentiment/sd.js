@@ -9,6 +9,7 @@ exports.handler = (event, context, callback) => {
 	
 	var snapshots = event.snapshots;
 	var obj = {"metadata":{}};	
+	var retVal = {};	
 	
 	obj.metadata.organization = snapshots.metadata.organization;
 	obj.metadata.product = snapshots.metadata.product;
@@ -36,14 +37,11 @@ exports.handler = (event, context, callback) => {
 				obj.reviews = last.reviews+1;
 			}
 		});
+		db.close();		
 		obj.timestamp = { type: Date, default: Date.now };
-		db.close();	
-		var snapshots = {};
-		snapshots['sentiment'] = obj;
-		//var fs = require('fs');
-		//fs.writeFileSync("../../upstreamSentiment.json", JSON.stringify(snapshots));
-		return snapshots;
+		retVal['sentiment'] = obj;
 	});
+	return retVal;												
 }
 
 

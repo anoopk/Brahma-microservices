@@ -13,15 +13,17 @@ exports.handler = async(event, context) => {
 		logger.handler(snapshots, {"append": "true", "filename": "./aylienized.json"}).then((result) => {
 			console.log("Local copies of data made.");
 		});
-	
-		//ex.handler({"snapshots": snapshots.sentiment}, config.aggregators.sentiment, (results) => {
-		//	console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>  ", result);			
-		//});
+		
+		const fs = require('fs');	
+		ex.handler({"snapshots": snapshots.sentiment}, config.aggregators.sentiment, (results) => {
+			console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ", results);
+			fs.writeFileSync("./upstreamSentiments.json", JSON.stringify(results));								
+		});
 		
 		ex.handler({"snapshots": snapshots.abs}, config.aggregators.aspect, (results) => {
-			console.log(config.aggregators.aspect.message);
+			console.log("jsdfvbsdfvsbdf");
+			fs.writeFileSync("./upstreamAspects.json", JSON.stringify(results));								
 		});
-		console.log("tsts up");
 		//var mongo = require('../services/storers/mongo');
 		//config.aggregators.strangedesigns.snapshots = result;
 		//config.aggregators.strangedesigns.db = config.storers.mongodb.databases.aggregate;
