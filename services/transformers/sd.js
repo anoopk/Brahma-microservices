@@ -26,23 +26,21 @@ exports.handler = async(event, context) => {
 	var aiPABS = ai.AnalyseABS();			
 	var aiP = ai.Analyse();
 	var snapshots = {};
-	var params = {
-		Bucket : "transformer-dev-serverlessdeploymentbucket-12t9niv5yoqyl",
-		Key : "Snapshots"
-	}			
+	
 	await Promise.all([aiPABS, aiP]).then(async function(results){
-		//Send extra data to s3 bucket
+		const aws = require('aws-sdk')		
+		const s3 = new aws.S3();
+		//Send extra data to s3 bucket		
+		s3.putObject({ Bucket: "transformer-dev-serverlessdeploymentbucket-12t9niv5yoqyl", Key: "Aylien Snapshots", Body: JSON.stringify(results) }, function(err, data) {
+			if(err) console.log(err);
+			console.log('Uploaded text data to S3 bucket transformer-dev-serverlessdeploymentbucket-12t9niv5yoqyl') 
+		});		
+		
 		delete results[0].text;
-		//delete results[0].aspects;
 		delete results[0].sentences;		
 		delete results[1].text;
 		console.log("Aylienized wiki entry for ", infoObj);
 		snapshots = createDBSnapshots(results, infoObj, config.strangedesigns.watch);
-		const fs = require('fs');
-		await fs.writeFile("./snapshots.json", JSON.stringify(snapshots), (error) => {		
-			if(error)	
-				console.log("Error writing analysis data to local file");
-		});
 	});	
 	return snapshots;
 }

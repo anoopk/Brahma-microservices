@@ -7,20 +7,22 @@ exports.handler = async(event, context) => {
 	}
 	var dbss = event.snapshots;
 	//context.callbackWaitsForEmptyEventLoop = false;	
+	let client = await MongoClient.connect(config.url, { useNewUrlParser: true });	
+	let db = client.db(config.db);				
 	try{
-		await MongoClient.connect(config.url, { useNewUrlParser: true }, (function(err, client){
-			const dbo = client.db(config.db);			
-			Object.keys(dbss).forEach(function(key){
+		Object.keys(dbss).forEach(function(key){
+		db.collection(key).insertOne(dbss[key], function(err, res) {
 			if (err) throw err;
-			dbo.collection(key).insertOne(dbss[key], function(err, res) {
-				if (err) throw err;
-				db.close();
-				});
+			//console.log("Mongoised ", config.url);
 			});
-		}));
-	}
+		});
+		return "Mongoisation Complete";		
+	}	
 	catch (err){
 		console.log(err);
+	}
+	finally{
+		client.close();
 	}
 }
 
