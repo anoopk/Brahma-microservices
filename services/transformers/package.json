@@ -4,7 +4,7 @@
   "description": "Used to access Aylien data for a URL and transform it. Currently only the Strange Designs transformer is implemented.",
   "main": "handler",
   "scripts": {
-    "test": "test"
+    "test": "node runlocal.js"
   },
   "repository": {
     "type": "git",
