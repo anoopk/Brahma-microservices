@@ -1,0 +1,29 @@
+{
+  "name": "brahma-microservices-sdk",
+  "version": "1.0.0",
+  "description": "SDK to access the car reviews data",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anoopk/Brahma-microservices-sdk.git"
+  },
+  "keywords": [
+    "Cars",
+    "Reviews",
+    "Rotten",
+    "Tomatoes",
+    "Aylien",
+    "ML",
+    "AI",
+    "TextAnalysis"
+  ],
+  "author": "Strange Designs",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/anoopk/Brahma-microservices-sdk/issues"
+  },
+  "homepage": "https://github.com/anoopk/Brahma-microservices-sdk#readme"
+}

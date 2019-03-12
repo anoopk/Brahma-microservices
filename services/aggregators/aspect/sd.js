@@ -11,7 +11,7 @@ function aggregateAspects(current, snapshot){
 		var found = false;
 		if(null != current){
 			Object.keys(current.result.aspects).forEach(function(i){
-				console.log(current.result.aspects[i]);				
+				//console.log(current.result.aspects[i]);				
 				if(current.result.aspects[i].aspect == snapshot.result.aspects[k].aspect 
 				&& snapshot.result.aspects[k].polarity == 'positive' 
 				&& snapshot.result.aspects[k].aspect_confidence > .5

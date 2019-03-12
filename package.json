@@ -1,5 +1,5 @@
 {
-  "name": "@anoopk/review-analysis",
+  "name": "brahma-microservices-sdk",
   "version": "1.0.0",
   "description": "Analyse public vehicle reviews via ML (Aylien) and save the data into a Document Store (Mongo). Supports Classifications and Document and Aspect level Sentiment Analysis.",
   "main": "main.js",
@@ -40,5 +40,8 @@
   "bugs": {
     "url": "https://github.com/anoopk/Brahma/issues"
   },
-  "homepage": "https://github.com/anoopk/Brahma#readme"
+  "homepage": "https://github.com/anoopk/Brahma#readme",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
 }

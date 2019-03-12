@@ -13,7 +13,7 @@ exports.handler = async(event, context) => {
 		logger.handler(snapshots, {"append": "true", "filename": "./aylienized.json"}).then((result) => {
 			console.log("Local copies of data made.");
 		});
-		
+		return("Service shutting. Some lambdas might still be running.");
 		const fs = require('fs');	
 		ex.handler({"snapshots": snapshots.sentiment}, config.aggregators.sentiment, (results) => {
 			fs.writeFileSync("./upstreamSentiments.json", JSON.stringify(results));								

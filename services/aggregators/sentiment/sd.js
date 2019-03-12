@@ -26,7 +26,7 @@ exports.handler = (event, context, callback) => {
 			if(null == last){										
 				obj.reviews = 1;				
 				obj.result = snapshots.result;						
-				console.log("Introducing Collection with ", obj);				
+				//console.log("Introducing Collection with ", obj);				
 			}
 			else{
 				obj.result = last.result;						

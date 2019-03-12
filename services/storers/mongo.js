@@ -12,15 +12,12 @@ exports.handler = async(event, context) => {
 	try{
 		Object.keys(dbss).forEach(function(key){
 		db.collection(key).insertOne(dbss[key], function(err, res) {
-			if (err) throw err;
+			if (err) console.log("Failed Mongoisation");
 			//console.log("Mongoised ", config.url);
 			});
 		});
 		return "Mongoisation Complete";		
 	}	
-	catch (err){
-		console.log(err);
-	}
 	finally{
 		client.close();
 	}
