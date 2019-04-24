@@ -2,25 +2,40 @@ Reading images from D:\N15477 P13353\D Drive\Projects\Samples\brahma-microservic
 8 buckets
 S3 Bucket aggregators-dev-serverlessdeploymentbucket-pu393bpbga30 exists.
 Image icymountain.jpg already exists.
-Reading D:\N15477 P13353\D Drive\Projects\Samples\brahma-microservices\services\transformers\aws\Images\kohli.jpg
-Reading D:\N15477 P13353\D Drive\Projects\Samples\brahma-microservices\services\transformers\aws\Images\kohli2.jpg
-Reading D:\N15477 P13353\D Drive\Projects\Samples\brahma-microservices\services\transformers\aws\Images\lionel-messi.jpg
-Reading D:\N15477 P13353\D Drive\Projects\Samples\brahma-microservices\services\transformers\aws\Images\MississippiHurt.jpg
-Reading D:\N15477 P13353\D Drive\Projects\Samples\brahma-microservices\services\transformers\aws\Images\Vidula.JPG
-Read 35.529296875 kb from image D:\N15477 P13353\D Drive\Projects\Samples\brahma-microservices\services\transformers\aws\Images\kohli.jpg.
-Read 56.734375 kb from image D:\N15477 P13353\D Drive\Projects\Samples\brahma-microservices\services\transformers\aws\Images\kohli2.jpg.
-Read 265.1923828125 kb from image D:\N15477 P13353\D Drive\Projects\Samples\brahma-microservices\services\transformers\aws\Images\lionel-messi.jpg.
-Read 607.7265625 kb from image D:\N15477 P13353\D Drive\Projects\Samples\brahma-microservices\services\transformers\aws\Images\Vidula.JPG.
-Read 884.0341796875 kb from image D:\N15477 P13353\D Drive\Projects\Samples\brahma-microservices\services\transformers\aws\Images\MississippiHurt.jpg.
-Uploaded kohli.jpg to bucket aggregators-dev-serverlessdeploymentbucket-pu393bpbga30
-Uploaded kohli2.jpg to bucket aggregators-dev-serverlessdeploymentbucket-pu393bpbga30
-Uploaded lionel-messi.jpg to bucket aggregators-dev-serverlessdeploymentbucket-pu393bpbga30
-Uploaded vidula.jpg to bucket aggregators-dev-serverlessdeploymentbucket-pu393bpbga30
-Uploaded mississippihurt.jpg to bucket aggregators-dev-serverlessdeploymentbucket-pu393bpbga30
-kohli.jpg: Clothing, Apparel, Human, Person, Athlete, Sport, Sports, People, Team Sport, Baseball, Softball, Team, Ballplayer, Cricket, Face, Helmet, Hammer, Tool, Skin, Tattoo, Shirt, Jersey
-kohli2.jpg: Human, Person, Face, Beard, Man, People, Sports, Sport, Athlete, Crowd
-vidula.jpg: Motorcycle, Vehicle, Transportation, Person, Human, Bus, Apparel, Clothing, Footwear, Shoe, Light, Road, Headlight, Asphalt, Tarmac, Tire, Machine, Wheel, Gravel, Dirt Road, Motor Scooter, Vespa, Helmet
-mississippihurt.jpg: Musical Instrument, Person, Musician, Guitarist, Guitar, Human, Leisure Activities, Performer, Shoe, Clothing, Apparel, Footwear, Face, Photo, Portrait, Photography
-icymountain.jpg: Nature, Mountain, Outdoors, Ice, Snow, Mountain Range, Slope, Glacier, Peak, Piste, Sports, Sport, Winter
-lionel-messi.jpg: Apparel, Clothing, Person, Human, Shorts, Sphere, People, Team Sport, Sport, Sports, Team, Football, Shirt, Athlete, Soccer
+Image kohli.jpg already exists.
+Image kohli2.jpg already exists.
+Image lionel-messi.jpg already exists.
+Image mississippihurt.jpg already exists.
+Image vidula.jpg already exists.
+{ FaceDetails: 
+   [ { BoundingBox: [Object],
+       Landmarks: [Array],
+       Pose: [Object],
+       Quality: [Object],
+       Confidence: 99.9999771118164 } ] }
+{ FaceDetails: 
+   [ { BoundingBox: [Object],
+       Landmarks: [Array],
+       Pose: [Object],
+       Quality: [Object],
+       Confidence: 100 } ] }
+{ FaceDetails: [] }
+{ FaceDetails: 
+   [ { BoundingBox: [Object],
+       Landmarks: [Array],
+       Pose: [Object],
+       Quality: [Object],
+       Confidence: 99.99982452392578 } ] }
+{ FaceDetails: 
+   [ { BoundingBox: [Object],
+       Landmarks: [Array],
+       Pose: [Object],
+       Quality: [Object],
+       Confidence: 99.9998550415039 } ] }
+{ FaceDetails: 
+   [ { BoundingBox: [Object],
+       Landmarks: [Array],
+       Pose: [Object],
+       Quality: [Object],
+       Confidence: 99.99998474121094 } ] }
 done!

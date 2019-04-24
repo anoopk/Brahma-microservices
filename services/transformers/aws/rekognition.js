@@ -116,15 +116,13 @@ function uploadImage(bucketName, imageBuffer, imageMeta){
 function recognize(bucketName, imageMeta){
   return new Promise((resolve, reject)=>{
     const rek = new AWS.Rekognition();
-    rek.detectLabels({
+    rek.detectFaces({
       Image: {
         S3Object: {
           Bucket: bucketName, 
           Name: imageMeta.id
         }
-      },
-      MaxLabels: 24,
-      MinConfidence: 60
+      }
     }, (err, data) => {
       if (err){
         console.log(err, err.stack);
@@ -132,8 +130,8 @@ function recognize(bucketName, imageMeta){
         return;
       }
 
-      const labels = data.Labels.map(l => l.Name);
-      console.log(`${imageMeta.id}: ${labels.join(", ")}`)
+	  console.log(data)
+      const labels = data
       resolve(labels);
     });
   });
