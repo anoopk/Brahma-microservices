@@ -26,6 +26,8 @@
   "homepage": "https://github.com/anoopk/Brahma-microservices#readme",
   "dependencies": {
     "aylien_textapi": "^0.7.0",
-    "request": "^2.88.0"
+    "node-rekognition": "^0.4.0",
+    "request": "^2.88.0",
+    "uuid": "^3.3.2"
   }
 }
