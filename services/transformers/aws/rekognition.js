@@ -161,6 +161,58 @@ function recognize(bucketName, imageMeta){
 		console.log(`${imageMeta.id}`, 'Features Kohli')
       resolve(labels);
     });
+
+    rek.compareFaces({
+      SourceImage: {
+        S3Object: {
+          Bucket: bucketName, 
+          Name: imageMeta.id
+        }
+      },
+    TargetImage: {
+        S3Object: {
+          Bucket: bucketName, 
+          Name: "koko.jpg"
+        }
+      }  	  
+    }, (err, data) => {
+      if (err){
+        console.log(err, err.stack);
+        reject(err);
+        return;
+      }
+
+      const labels = data.FaceMatches;
+	  if(data.FaceMatches.length)
+		console.log(`${imageMeta.id}`, 'Features koko')
+      resolve(labels);
+    });
+
+    rek.compareFaces({
+      SourceImage: {
+        S3Object: {
+          Bucket: bucketName, 
+          Name: imageMeta.id
+        }
+      },
+    TargetImage: {
+        S3Object: {
+          Bucket: bucketName, 
+          Name: "kokosiddu.jpg"
+        }
+      }  	  
+    }, (err, data) => {
+      if (err){
+        console.log(err, err.stack);
+        reject(err);
+        return;
+      }
+
+      const labels = data.FaceMatches;
+	  if(data.FaceMatches.length)
+		console.log(`${imageMeta.id}`, 'Features siddu')
+      resolve(labels);
+    });
 	
     rek.detectLabels({
       Image: {
@@ -199,9 +251,6 @@ function saveLabeledImages(labeledImages){
 
 function processImages(images, bucketObjectKeys){
   return Promise.all(images.map((imageMeta) => new Promise((resolve, reject)=>{
-  resolve();
-  return;
-	  
 
     if (bucketObjectKeys.indexOf(imageMeta.id) >= 0){
       console.log(`Image ${imageMeta.id} already exists.`);
