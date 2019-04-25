@@ -131,7 +131,9 @@ function recognize(bucketName, imageMeta){
       }
 
 	  console.log(data)
-      const labels = data
+      const labels = data//.TextDetections.map(l => l.DetectedText);
+      //console.log(`${imageMeta.id}: ${labels.join(", ")}`)
+	  console.log(`${imageMeta.id}:`, data)
       resolve(labels);
     });
   });
