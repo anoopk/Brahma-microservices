@@ -106,7 +106,6 @@ function uploadImage(bucketName, imageBuffer, imageMeta){
         reject(err);
         return;
       }
-
       console.log(`Uploaded ${imageMeta.id} to bucket ${bucketName}`);
       resolve(data);
     });  
@@ -114,8 +113,10 @@ function uploadImage(bucketName, imageBuffer, imageMeta){
 }
 
 function recognize(bucketName, imageMeta){
+  var tagCloud = []	
   return new Promise((resolve, reject)=>{
     const rek = new AWS.Rekognition();
+	tagCloud[imageMeta.id] = [];	
     rek.detectFaces({
       Image: {
         S3Object: {
@@ -132,10 +133,30 @@ function recognize(bucketName, imageMeta){
 
       //const labels = data.Labels.map(l => l.Name);
 	  const labels = data.FaceDetails.length;
-      console.log(`${imageMeta.id}: Faces detected`,  JSON.stringify(labels))
+	  tagCloud[imageMeta.id].faces = JSON.stringify(labels);
+      console.log(`${imageMeta.id}: Faces detected`,  tagCloud[imageMeta.id].faces)
       resolve(labels);
     });	
+    rek.detectText({
+      Image: {
+        S3Object: {
+          Bucket: bucketName, 
+          Name: imageMeta.id
+        }
+      }
+    }, (err, data) => {
+      if (err){
+        console.log(err, err.stack);
+        reject(err);
+        return;
+      }
 
+      //const labels = data.Labels.map(l => l.Name);
+	  const labels = data.TextDetections.map(l => l.DetectedText);
+	  tagCloud[imageMeta.id].text = JSON.stringify(labels.join(", "));
+      //console.log(`${imageMeta.id}: Text detected => ${labels.join(", ")}`)
+      resolve(labels);
+    });	
     rek.compareFaces({
       SourceImage: {
         S3Object: {
@@ -157,9 +178,11 @@ function recognize(bucketName, imageMeta){
       }
 
       const labels = data.FaceMatches;
-	  if(data.FaceMatches.length)
-		console.log(`${imageMeta.id}`, 'Features Kohli')
-      resolve(labels);
+	  if(data.FaceMatches.length){
+		tagCloud[imageMeta.id].comments = JSON.stringify('Features Virat Kohli, Cricket, India, Captain, RCB, #ViratKohli');
+		console.log(`${imageMeta.id}`, 'Features Virat Kohli, Cricket, India, Captain, RCB, #ViratKohli')
+      }
+	  resolve(labels);
     });
 
     rek.compareFaces({
@@ -184,7 +207,7 @@ function recognize(bucketName, imageMeta){
 
       const labels = data.FaceMatches;
 	  if(data.FaceMatches.length)
-		console.log(`${imageMeta.id}`, 'Features koko')
+		console.log(`${imageMeta.id}`, 'Features Koko')
       resolve(labels);
     });
 
@@ -210,7 +233,7 @@ function recognize(bucketName, imageMeta){
 
       const labels = data.FaceMatches;
 	  if(data.FaceMatches.length)
-		console.log(`${imageMeta.id}`, 'Features siddu')
+		console.log(`${imageMeta.id}`, 'Features Self')
       resolve(labels);
     });
 	
@@ -220,7 +243,8 @@ function recognize(bucketName, imageMeta){
           Bucket: bucketName, 
           Name: imageMeta.id
         }
-      }
+      },
+	MinConfidence: 95.00	  
     }, (err, data) => {
       if (err){
         console.log(err, err.stack);
@@ -236,9 +260,8 @@ function recognize(bucketName, imageMeta){
 }
 
 function saveLabeledImages(labeledImages){
-	return;
   return new Promise((resolve, reject) =>  {
-    fs.writeFile(path.join(__dirname, "../docs/", "labels.json"), JSON.stringify(labeledImages), (err)=>{
+    fs.appendFile(path.join(__dirname, "../docs/", "labels.json"), JSON.stringify(labeledImages), (err)=>{
       if (err){
         console.log(err);
         reject(err);
@@ -253,7 +276,7 @@ function processImages(images, bucketObjectKeys){
   return Promise.all(images.map((imageMeta) => new Promise((resolve, reject)=>{
 
     if (bucketObjectKeys.indexOf(imageMeta.id) >= 0){
-      console.log(`Image ${imageMeta.id} already exists.`);
+      //console.log(`Image ${imageMeta.id} already exists.`);
       resolve();
       return;
     };
