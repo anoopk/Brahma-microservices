@@ -4,7 +4,7 @@ const fs = require("fs");
 
 const BUCKET_NAME = "aggregators-dev-serverlessdeploymentbucket-pu393bpbga30"
 AWS.config.update({region:'us-east-1'});
-
+const features = [{image: "kohli.jpg", tags: "Virat Kohli"}, {image: "messi.jpg", tags:"Lionel Messi"}]
 var profile = [];
 
 function getImageMetadata(){
@@ -114,6 +114,39 @@ function uploadImage(bucketName, imageBuffer, imageMeta){
   });
 }
 
+function detect(rek, bucketName, imageMeta, output, entity){
+	return new Promise((resolve, reject)=>{
+		rek.compareFaces({
+				SourceImage: {
+					S3Object: {
+					Bucket: bucketName, 
+					Name: imageMeta.id
+					}
+				},
+				TargetImage: {
+					S3Object: {
+					Bucket: bucketName, 
+					Name: entity + '.jpg'
+					}
+				}  	  
+			}, (err, data) => {
+			if (err){
+				console.log(err, err.stack);
+				reject(err);
+				return;
+			}
+			const labels = data.FaceMatches;
+			if(data.FaceMatches.length){
+				profile[imageMeta.id].push({entity: true})
+				fs.appendFileSync(output, JSON.stringify({entity: true}))			
+				fs.appendFileSync(output, "\n")							
+				console.log(`${imageMeta.id}`, 'Features Self')
+			}
+			resolve(labels);
+		});
+	})		
+}
+
 function recognize(bucketName, imageMeta){
 	var details = {
 	  Image: {
@@ -142,65 +175,9 @@ function recognize(bucketName, imageMeta){
 			fs.appendFileSync(output, "\n")
 			resolve(detectedTexts);
 		});	
-
-		rek.compareFaces({
-				SourceImage: {
-					S3Object: {
-					Bucket: bucketName, 
-					Name: imageMeta.id
-					}
-				},
-				TargetImage: {
-					S3Object: {
-					Bucket: bucketName, 
-					Name: "self.jpg"
-					}
-				}  	  
-			}, (err, data) => {
-			if (err){
-				console.log(err, err.stack);
-				reject(err);
-				return;
-			}
-			const labels = data.FaceMatches;
-			if(data.FaceMatches.length){
-				profile[imageMeta.id].push({self: true})
-				fs.appendFileSync(output, JSON.stringify({self: true}))			
-				fs.appendFileSync(output, "\n")							
-				console.log(`${imageMeta.id}`, 'Features Self')
-			}
-			resolve(labels);
-		});
-
-		rek.compareFaces({
-				SourceImage: {
-					S3Object: {
-					Bucket: bucketName, 
-					Name: imageMeta.id
-					}
-				},
-				TargetImage: {
-					S3Object: {
-					Bucket: bucketName, 
-					Name: "partner.jpg"
-					}
-				}  	  
-			}, (err, data) => {
-			if (err){
-				console.log(err, err.stack);
-				reject(err);
-				return;
-			}
-			const labels = data.FaceMatches;
-			if(data.FaceMatches.length){
-				profile[imageMeta.id].push({partner: true})
-				fs.appendFileSync(output, JSON.stringify({partner: true}))			
-				fs.appendFileSync(output, "\n")							
-				console.log(`${imageMeta.id}`, 'Features partner')
-			}
-			resolve(labels);
-		});
 		
+		//detect(rek, bucketName, imageMeta, output, "self");
+		//detect(rek, bucketName, imageMeta, output, "kohli");				
 		rek.detectFaces(details, (err, data) => {
 			if (err){
 				console.log(err, err.stack);
