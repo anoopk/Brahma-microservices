@@ -1,4 +1,5 @@
+{"labels":["Human","Person","Pub","Bar Counter","Clothing","Apparel","Alcohol","Beverage","Drink","Glass","Bottle","Sleeve","Beer","Club"]}
 {"detectedText":[]}
-{"labels":["Person","Human","Pub","Bar Counter","Apparel","Clothing","Drink","Beverage","Alcohol","Glass","Bottle","Sleeve","Beer","Club"]}
+{"contains":"anoop"}
 {"facecount":2}
-{"entity":"self"}
+{"contains":"self"}

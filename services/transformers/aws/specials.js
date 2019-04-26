@@ -1,8 +1,9 @@
 const fs = require('fs')
 var specials = require("./specials.json")
 
-learn({"self": {
+learn({"anoop": {
 		"image": "anoop.jpg",
+		"relation": "Self",
 		"tags": ["Self"]
 }}) 
 

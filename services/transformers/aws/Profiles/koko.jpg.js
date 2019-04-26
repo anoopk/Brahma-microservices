@@ -1,3 +1,3 @@
+{"labels":["Person","Human","Leisure Activities","Musical Instrument","Guitar","Musician","Music Band","Guitarist","Performer","Bass Guitar","Electric Guitar"]}
 {"facecount":4}
-{"labels":["Person","Human","Musical Instrument","Guitar","Leisure Activities","Musician","Music Band","Performer","Guitarist","Bass Guitar","Electric Guitar"]}
 {"detectedText":[]}

@@ -1,4 +1,4 @@
-{"entity":"kohli"}
+{"labels":["Apparel","Clothing","Person","Human","Sport","Athlete","Sports","People","Softball","Baseball","Team","Ballplayer","Team Sport","Cricket","Face","Helmet","Hammer","Tool","Tattoo","Skin","Shirt","Jersey","Field","Cap","Baseball Cap","Hat","Hair"]}
 {"detectedText":["01O","INDIA","01O","INDIA"]}
-{"labels":["Clothing","Apparel","Person","Human","Sport","Sports","Athlete","People","Team","Team Sport","Softball","Ballplayer","Baseball","Cricket","Face","Helmet","Hammer","Tool","Skin","Tattoo","Jersey","Shirt","Field","Hat","Baseball Cap","Cap","Hair"]}
 {"facecount":1}
+{"contains":"kohli"}

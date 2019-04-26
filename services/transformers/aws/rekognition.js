@@ -114,7 +114,7 @@ function uploadImage(bucketName, imageBuffer, imageMeta){
   });
 }
 
-function detect(rek, bucketName, imageMeta, output, entity){
+function detect(rek, bucketName, imageMeta, output, entity, label){
 	return new Promise((resolve, reject)=>{
 		rek.compareFaces({
 				SourceImage: {
@@ -137,8 +137,8 @@ function detect(rek, bucketName, imageMeta, output, entity){
 			}
 			const labels = data.FaceMatches;
 			if(data.FaceMatches.length){
-				profile[imageMeta.id].push({entity: entity})
-				fs.appendFileSync(output, JSON.stringify({entity: entity}))			
+				profile[imageMeta.id].push({contains: entity})
+				fs.appendFileSync(output, JSON.stringify({contains: entity}))			
 				fs.appendFileSync(output, "\n")							
 				console.log(`${imageMeta.id}`, 'Features ' + entity)
 			}

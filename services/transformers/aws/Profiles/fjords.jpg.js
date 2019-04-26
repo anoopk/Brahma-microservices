@@ -1,4 +1,5 @@
 {"detectedText":[]}
-{"entity":"self"}
-{"labels":["Handrail","Banister","Railing","Sleeve","Apparel","Clothing","Pants","Person","Human","Denim","Jeans","Outdoors","Long Sleeve","Nature","Mountain","Jacket","Coat","Mountain Range"]}
+{"labels":["Banister","Handrail","Railing","Apparel","Clothing","Sleeve","Pants","Person","Human","Jeans","Denim","Outdoors","Long Sleeve","Mountain","Nature","Jacket","Coat","Mountain Range"]}
+{"contains":"self"}
 {"facecount":1}
+{"contains":"anoop"}

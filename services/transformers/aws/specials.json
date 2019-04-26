@@ -1,1 +1,1 @@
-[{"kohli":{"image":"kohli.jpg","tags":["Virat Kohli","Cricket","Batsman"]}},{"siddu":{"image":"siddu.jpg","tags":["Frend","Siddhartha Sharma"]}},{"self":{"image":"anoop.jpg","tags":["Self"]}}]
+[{"kohli":{"image":"kohli.jpg","tags":["Virat Kohli","Cricket","Batsman"]}},{"siddu":{"image":"siddu.jpg","tags":["Frend","Siddhartha Sharma"]}},{"self":{"relation":"Self","image":"anoop.jpg","tags":["Self"]}},{"anoop":{"image":"anoop.jpg","relation":"Self","tags":["Self"]}}]
