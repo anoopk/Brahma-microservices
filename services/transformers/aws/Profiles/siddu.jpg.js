@@ -1,4 +1,4 @@
-{"labels":["Person","Human","Interior Design","Indoors","Sitting","Apparel","Clothing","Furniture","Chair","Leisure Activities","Wood","Electronics","Screen","Couch","Living Room","Room"]}
-{"detectedText":[]}
+{"labels":["Person","Human","Interior Design","Indoors","Sitting","Clothing","Apparel","Furniture","Chair","Leisure Activities","Wood","Electronics","Screen","Couch","Room","Living Room"]}
 {"facecount":1}
+{"detectedText":[]}
 {"entity":"siddu"}

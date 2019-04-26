@@ -1,3 +1,4 @@
+{"entity":"self"}
 {"detectedText":[]}
-{"labels":["Accessory","Accessories","Glasses","Face","Person","Human","Beard"]}
 {"facecount":1}
+{"labels":["Accessory","Glasses","Accessories","Human","Person","Face","Beard"]}

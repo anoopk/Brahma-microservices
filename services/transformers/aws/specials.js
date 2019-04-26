@@ -1,7 +1,7 @@
 const fs = require('fs')
 var specials = require("./specials.json")
 
-learn({"anoop": {
+learn({"self": {
 		"image": "anoop.jpg",
 		"tags": ["Self"]
 }}) 
@@ -16,6 +16,7 @@ function refresh(specials){
 
 function learn(json){
 	specials.push(json);
+	refresh(specials)
 }
 
 function list(){
