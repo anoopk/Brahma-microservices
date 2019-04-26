@@ -5,6 +5,8 @@ const fs = require("fs");
 const BUCKET_NAME = "aggregators-dev-serverlessdeploymentbucket-pu393bpbga30"
 AWS.config.update({region:'us-east-1'});
 
+var profile = [];
+
 function getImageMetadata(){
   return new Promise((resolve, reject)=>{
 
@@ -113,150 +115,60 @@ function uploadImage(bucketName, imageBuffer, imageMeta){
 }
 
 function recognize(bucketName, imageMeta){
-  var tagCloud = []	
-  return new Promise((resolve, reject)=>{
-    const rek = new AWS.Rekognition();
-	tagCloud[imageMeta.id] = [];	
-    rek.detectFaces({
-      Image: {
-        S3Object: {
-          Bucket: bucketName, 
-          Name: imageMeta.id
-        }
-      }
-    }, (err, data) => {
-      if (err){
-        console.log(err, err.stack);
-        reject(err);
-        return;
-      }
+	var details = {
+	  Image: {
+		S3Object: {
+		  Bucket: bucketName, 
+		  Name: imageMeta.id
+		}
+	  },
+	};
+	const output = './profiles/' + imageMeta.id + '.js'
+	fs.writeFileSync(output, "")			
+	if(null == profile[imageMeta.id])
+	  profile[imageMeta.id] = [];
 
-      //const labels = data.Labels.map(l => l.Name);
-	  const labels = data.FaceDetails.length;
-	  tagCloud[imageMeta.id].faces = JSON.stringify(labels);
-      console.log(`${imageMeta.id}: Faces detected`,  tagCloud[imageMeta.id].faces)
-      resolve(labels);
-    });	
-    rek.detectText({
-      Image: {
-        S3Object: {
-          Bucket: bucketName, 
-          Name: imageMeta.id
-        }
-      }
-    }, (err, data) => {
-      if (err){
-        console.log(err, err.stack);
-        reject(err);
-        return;
-      }
-
-      //const labels = data.Labels.map(l => l.Name);
-	  const labels = data.TextDetections.map(l => l.DetectedText);
-	  tagCloud[imageMeta.id].text = JSON.stringify(labels.join(", "));
-      //console.log(`${imageMeta.id}: Text detected => ${labels.join(", ")}`)
-      resolve(labels);
-    });	
-    rek.compareFaces({
-      SourceImage: {
-        S3Object: {
-          Bucket: bucketName, 
-          Name: imageMeta.id
-        }
-      },
-    TargetImage: {
-        S3Object: {
-          Bucket: bucketName, 
-          Name: "kohli.jpg"
-        }
-      }  	  
-    }, (err, data) => {
-      if (err){
-        console.log(err, err.stack);
-        reject(err);
-        return;
-      }
-
-      const labels = data.FaceMatches;
-	  if(data.FaceMatches.length){
-		tagCloud[imageMeta.id].comments = JSON.stringify('Features Virat Kohli, Cricket, India, Captain, RCB, #ViratKohli');
-		console.log(`${imageMeta.id}`, 'Features Virat Kohli, Cricket, India, Captain, RCB, #ViratKohli')
-      }
-	  resolve(labels);
-    });
-
-    rek.compareFaces({
-      SourceImage: {
-        S3Object: {
-          Bucket: bucketName, 
-          Name: imageMeta.id
-        }
-      },
-    TargetImage: {
-        S3Object: {
-          Bucket: bucketName, 
-          Name: "koko.jpg"
-        }
-      }  	  
-    }, (err, data) => {
-      if (err){
-        console.log(err, err.stack);
-        reject(err);
-        return;
-      }
-
-      const labels = data.FaceMatches;
-	  if(data.FaceMatches.length)
-		console.log(`${imageMeta.id}`, 'Features Koko')
-      resolve(labels);
-    });
-
-    rek.compareFaces({
-      SourceImage: {
-        S3Object: {
-          Bucket: bucketName, 
-          Name: imageMeta.id
-        }
-      },
-    TargetImage: {
-        S3Object: {
-          Bucket: bucketName, 
-          Name: "kokosiddu.jpg"
-        }
-      }  	  
-    }, (err, data) => {
-      if (err){
-        console.log(err, err.stack);
-        reject(err);
-        return;
-      }
-
-      const labels = data.FaceMatches;
-	  if(data.FaceMatches.length)
-		console.log(`${imageMeta.id}`, 'Features Self')
-      resolve(labels);
-    });
-	
-    rek.detectLabels({
-      Image: {
-        S3Object: {
-          Bucket: bucketName, 
-          Name: imageMeta.id
-        }
-      },
-	MinConfidence: 95.00	  
-    }, (err, data) => {
-      if (err){
-        console.log(err, err.stack);
-        reject(err);
-        return;
-      }
-
-      const labels = data.Labels.map(l => l.Name);
-      console.log(`${imageMeta.id}: ${labels.join(", ")}`)
-      resolve(labels);
-    });
-  });
+	const rek = new AWS.Rekognition();
+	return new Promise((resolve, reject)=>{
+		rek.detectText(details, (err, data) => {
+			if (err){
+				console.log(err, err.stack);
+				reject(err);
+				return;
+			} 
+			const detectedTexts = {detectedText: data.TextDetections.map(l => l.DetectedText)}				
+			profile[imageMeta.id].push(detectedTexts)					
+			fs.appendFileSync(output, JSON.stringify(detectedTexts))			
+			fs.appendFileSync(output, "\n")
+			resolve(detectedTexts);
+		});	
+		
+		rek.detectFaces(details, (err, data) => {
+			if (err){
+				console.log(err, err.stack);
+				reject(err);
+				return;
+			} 
+			const facecount = {facecount: data.FaceDetails.length}
+			profile[imageMeta.id].push(facecount)
+			fs.appendFileSync(output, JSON.stringify(facecount))			
+			fs.appendFileSync(output, "\n")			
+			resolve(facecount);
+		});	
+		
+		rek.detectLabels(details, (err, data) => {
+			if (err){
+				console.log(err, err.stack);
+				reject(err);
+				return;
+			} 
+			const labels = {labels: data.Labels.map(l => l.Name)}
+			profile[imageMeta.id].push(labels)
+			fs.appendFileSync(output, JSON.stringify(labels))			
+			fs.appendFileSync(output, "\n")
+			resolve(labels);
+		});			
+	});  				
 }
 
 function saveLabeledImages(labeledImages){
@@ -294,7 +206,13 @@ function processImages(images, bucketObjectKeys){
 function labelImages(images){
   return Promise.all(images.map(imageMeta => 
     recognize(BUCKET_NAME, imageMeta)
-    .then(data => {return {filename: path.basename(imageMeta.filename), id: imageMeta.id, labels: data}})));
+    .then(data => {
+		if(null == profile[imageMeta.id]){
+			profile[imageMeta.id] = [];
+		}
+		profile[imageMeta.id].push(JSON.stringify(data))
+		return profile;
+	}))); //return {filename: path.basename(imageMeta.filename), id: imageMeta.id, data: data.collection, value: data.data}
 }
 
 
@@ -310,9 +228,9 @@ Promise.all([getImageMetadata(), createIfNotExistsBucket(BUCKET_NAME)]).then((re
 
   return processImages(images, bucketObjectKeys)
     .then(labelImages)
-    .then(saveLabeledImages)
+    //.then(saveLabeledImages)
     .then(_=> {
-      console.log("done!");
+      console.log("Done");
     });
 
 }).catch(err => {
