@@ -1,1 +1,0 @@
-{"labels":["Glasses","Accessories","Accessory","Human","Face","Person","Beard"]}{"detectedText":[]}{"facecount":1}

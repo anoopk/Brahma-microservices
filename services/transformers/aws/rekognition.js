@@ -142,6 +142,64 @@ function recognize(bucketName, imageMeta){
 			fs.appendFileSync(output, "\n")
 			resolve(detectedTexts);
 		});	
+
+		rek.compareFaces({
+				SourceImage: {
+					S3Object: {
+					Bucket: bucketName, 
+					Name: imageMeta.id
+					}
+				},
+				TargetImage: {
+					S3Object: {
+					Bucket: bucketName, 
+					Name: "anoop.jpg"
+					}
+				}  	  
+			}, (err, data) => {
+			if (err){
+				console.log(err, err.stack);
+				reject(err);
+				return;
+			}
+			const labels = data.FaceMatches;
+			if(data.FaceMatches.length){
+				profile[imageMeta.id].push({self: true})
+				fs.appendFileSync(output, JSON.stringify({self: true}))			
+				fs.appendFileSync(output, "\n")							
+				console.log(`${imageMeta.id}`, 'Features Self')
+			}
+			resolve(labels);
+		});
+
+		rek.compareFaces({
+				SourceImage: {
+					S3Object: {
+					Bucket: bucketName, 
+					Name: imageMeta.id
+					}
+				},
+				TargetImage: {
+					S3Object: {
+					Bucket: bucketName, 
+					Name: "vidula.jpg"
+					}
+				}  	  
+			}, (err, data) => {
+			if (err){
+				console.log(err, err.stack);
+				reject(err);
+				return;
+			}
+			const labels = data.FaceMatches;
+			if(data.FaceMatches.length){
+				profile[imageMeta.id].push({partner: true})
+				fs.appendFileSync(output, JSON.stringify({partner: true}))			
+				fs.appendFileSync(output, "\n")							
+				console.log(`${imageMeta.id}`, 'Features partner')
+			}
+			resolve(labels);
+		});
 		
 		rek.detectFaces(details, (err, data) => {
 			if (err){
@@ -155,6 +213,7 @@ function recognize(bucketName, imageMeta){
 			fs.appendFileSync(output, "\n")			
 			resolve(facecount);
 		});	
+
 		
 		rek.detectLabels(details, (err, data) => {
 			if (err){
