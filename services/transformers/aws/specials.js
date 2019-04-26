@@ -1,12 +1,14 @@
 const fs = require('fs')
-var specials = require("./specials.json").specials
+var specials = require("./specials.json")
 
-learn({"siddu": {
-		"image": "siddu.jpg",
-		"tags": ["Frend", "Siddhartha Sharma"]
-}}) 
+//learn({"siddu": {
+//		"image": "siddu.jpg",
+//		"tags": ["Frend", "Siddhartha Sharma"]
+//}}) 
 
-forget("messi")
+//forget("siddu")
+
+list()
  
 function refresh(specials){
 	fs.writeFileSync("./specials.json", JSON.stringify(specials))	
@@ -14,6 +16,10 @@ function refresh(specials){
 
 function learn(json){
 	specials.push(json);
+}
+
+function list(){
+	specials.map(special => console.log(Object.keys(special)[0], Object.values(special)[0], ))
 }
 
 function forget(entity){

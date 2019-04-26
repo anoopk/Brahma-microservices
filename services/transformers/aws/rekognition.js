@@ -137,10 +137,10 @@ function detect(rek, bucketName, imageMeta, output, entity){
 			}
 			const labels = data.FaceMatches;
 			if(data.FaceMatches.length){
-				profile[imageMeta.id].push({entity: true})
-				fs.appendFileSync(output, JSON.stringify({entity: true}))			
+				profile[imageMeta.id].push({entity: entity})
+				fs.appendFileSync(output, JSON.stringify({entity: entity}))			
 				fs.appendFileSync(output, "\n")							
-				console.log(`${imageMeta.id}`, 'Features Self')
+				console.log(`${imageMeta.id}`, 'Features ' + entity)
 			}
 			resolve(labels);
 		});
@@ -176,8 +176,10 @@ function recognize(bucketName, imageMeta){
 			resolve(detectedTexts);
 		});	
 		
-		//detect(rek, bucketName, imageMeta, output, "self");
-		//detect(rek, bucketName, imageMeta, output, "kohli");				
+		detect(rek, bucketName, imageMeta, output, "anoop");
+		detect(rek, bucketName, imageMeta, output, "self");
+		detect(rek, bucketName, imageMeta, output, "kohli");				
+		
 		rek.detectFaces(details, (err, data) => {
 			if (err){
 				console.log(err, err.stack);
@@ -190,7 +192,6 @@ function recognize(bucketName, imageMeta){
 			fs.appendFileSync(output, "\n")			
 			resolve(facecount);
 		});	
-
 		
 		rek.detectLabels(details, (err, data) => {
 			if (err){
