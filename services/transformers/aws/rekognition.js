@@ -153,7 +153,7 @@ function recognize(bucketName, imageMeta){
 				TargetImage: {
 					S3Object: {
 					Bucket: bucketName, 
-					Name: "anoop.jpg"
+					Name: "self.jpg"
 					}
 				}  	  
 			}, (err, data) => {
@@ -182,7 +182,7 @@ function recognize(bucketName, imageMeta){
 				TargetImage: {
 					S3Object: {
 					Bucket: bucketName, 
-					Name: "vidula.jpg"
+					Name: "partner.jpg"
 					}
 				}  	  
 			}, (err, data) => {
