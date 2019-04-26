@@ -1,10 +1,10 @@
 const fs = require('fs')
 var specials = require("./specials.json")
 
-//learn({"siddu": {
-//		"image": "siddu.jpg",
-//		"tags": ["Frend", "Siddhartha Sharma"]
-//}}) 
+learn({"anoop": {
+		"image": "anoop.jpg",
+		"tags": ["Self"]
+}}) 
 
 //forget("siddu")
 
@@ -19,7 +19,7 @@ function learn(json){
 }
 
 function list(){
-	specials.map(special => console.log(Object.keys(special)[0], Object.values(special)[0], ))
+	specials.map(special => console.log(Object.keys(special)[0], Object.values(special)[0]))
 }
 
 function forget(entity){

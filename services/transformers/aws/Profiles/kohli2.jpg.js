@@ -1,4 +1,4 @@
-{"labels":["Person","Human","Face","Beard","Man","People","Sports","Sport","Athlete","Crowd"]}
+{"labels":["Face","Person","Human","Beard","Man","People","Athlete","Sport","Sports","Crowd"]}
+{"entity":"kohli"}
 {"facecount":1}
 {"detectedText":[]}
-{"entity":"kohli"}

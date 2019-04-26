@@ -176,9 +176,10 @@ function recognize(bucketName, imageMeta){
 			resolve(detectedTexts);
 		});	
 		
-		detect(rek, bucketName, imageMeta, output, "anoop");
-		detect(rek, bucketName, imageMeta, output, "self");
-		detect(rek, bucketName, imageMeta, output, "kohli");				
+		const specials = require("./specials.json")
+		Object.keys(specials).forEach(key => {
+			detect(rek, bucketName, imageMeta, output, Object.keys(specials[key])[0]);
+		});
 		
 		rek.detectFaces(details, (err, data) => {
 			if (err){

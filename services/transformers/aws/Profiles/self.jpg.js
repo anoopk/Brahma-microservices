@@ -1,5 +1,3 @@
-{"labels":["Accessory","Glasses","Accessories","Face","Person","Human","Beard"]}
 {"detectedText":[]}
+{"labels":["Accessory","Accessories","Glasses","Face","Person","Human","Beard"]}
 {"facecount":1}
-{"entity":"self"}
-{"entity":"anoop"}
