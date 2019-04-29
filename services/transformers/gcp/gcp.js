@@ -1,7 +1,7 @@
 'use strict';
 
 // [START vision_quickstart]
-async function quickstart() {
+async function quickstart(img) {
   // Imports the Google Cloud client library
   const vision = require('@google-cloud/vision');
 
@@ -9,10 +9,9 @@ async function quickstart() {
   const client = new vision.ImageAnnotatorClient();
 
   // Performs label detection on the image file
-  const [result] = await client.landmarkDetection('./images/psg.jpg');
-  const labels = result.landmarkAnnotations;
+  const [result] = await client.logoDetection(img);
+  const labels = result.logoAnnotations;
   labels.forEach(label => console.log(label.description));
 }
-// [END vision_quickstart]
 
-quickstart().catch(console.error);
+quickstart('./images/psg.jpg').catch(console.error);
