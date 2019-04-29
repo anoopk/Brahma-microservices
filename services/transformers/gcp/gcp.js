@@ -9,9 +9,8 @@ async function quickstart() {
   const client = new vision.ImageAnnotatorClient();
 
   // Performs label detection on the image file
-  const [result] = await client.labelDetection('./fjords.jpg');
-  const labels = result.labelAnnotations;
-  console.log('Labels:');
+  const [result] = await client.landmarkDetection('./images/psg.jpg');
+  const labels = result.landmarkAnnotations;
   labels.forEach(label => console.log(label.description));
 }
 // [END vision_quickstart]
