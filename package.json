@@ -4,6 +4,7 @@
   "description": "Analyse public vehicle reviews via ML (Aylien) and save the data into a Document Store (Mongo). Supports Classifications and Document and Aspect level Sentiment Analysis.",
   "main": "main.js",
   "dependencies": {
+    "@google-cloud/vision": "^0.25.0",
     "aws-sdk": "^2.407.0",
     "aylien_textapi": "^0.7.0",
     "bst": "^0.0.1",

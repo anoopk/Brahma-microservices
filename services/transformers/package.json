@@ -26,6 +26,7 @@
   "homepage": "https://github.com/anoopk/Brahma-microservices#readme",
   "dependencies": {
     "aylien_textapi": "^0.7.0",
+    "google-cloud-node": "0.0.1-security",
     "request": "^2.88.0"
   }
 }

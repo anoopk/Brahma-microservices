@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "brahma-vision",
+  "private_key_id": "de8d092d75de262e5497659e112f2db441784b66",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCybOOE2sxv4cOP\ng4i/WJCPs4/Ykv0r+GyqpXdm5TQiCGfCmHwEhUtcI4SkWy1VwzW9xxbDF+eWar2O\nZoHdgZWGT+1ROgL+JgwlTtNtalK3jKho0dT/5ElhwZyJZD5oaWwjaqFgWWcoBjt/\nY+LwByajYxwrdgO8Q2Upv28ZrZRt95x8B9mdpBNPLIPpO37nz13/ZmZL6ocToD9l\nbpju0WOK4nRX0oO9vYGgXQTDc/O2dsEqRR8lkRt8fJpKLiQOEuOH7IvmqWAZ9OM/\nweLMaJGg9mv0p0RvDyuA88yVZDZmGknS8HJ0i5iH0/GhUp3fpro5gz8BbGN66OLI\nKIFep/RtAgMBAAECggEAAPvHLEgNeO9oZc3ejtl04InnmNTElv21UaJ8XEGWrjpY\nIhM3mcnHTtB2TnafMxoSnYNvrW8gDGz1swd/H0Kz2YvuvbQhaJe6mOkMks2Te6YH\nlp5Te36dZe/MhlhaXLZ6DV7s2Uxc3HReVxcsnNCZRqzI7rdlkV/YuqhuuxhBGXMR\n0+05oUP8eG3k+Pq9z99I2jH1EXPc46ZH469HcolmmBBz/0RXro4KPmJFjORk3Mm1\nxocpfTecuEfWX8uAs2/PYoIrIFFFRDhqtpblrAlm52pLd01ljgWqsCfurMPLUHpj\nOyOwT4gKQCJXkqiMryUTBBmE/7El/KmrVftOmsfSaQKBgQD56T+eNQsGm/eeHhl9\ngLh9Z04xYTIt8C2MAA8ioL30Y3bv6sx8IRccOs8w7cApz2TVRt71umne0TLUOiBf\nOAR9o89VhiledCDeqkKbJWRBeQv1Jt+d5l5ZLCUb6RWqWhn5ptj0cEOcoG3Pah7U\nXAIQtumD5y5/2Yw1ivHqUqgKSQKBgQC2xcR4tqTt7wGXC6VA7GykX4mU02IunFRg\n3NaZVifkdd6hJb2bQtk1FdHnj5XYTRB1jVefUTc56RPOeQVx94g8NZI4sKaRgp69\nLtd/rsJzXRnZxNeE7jmejFnh9jSgDOvKkox0eJsM9xnOmDNeBBSD1BH0WnKOjIX0\n4gzlSmm5BQKBgQDdob76xp3doaprPtRqWiLDjD9rSYCf/vXVyCOkGRv9RcywHvJ0\nT0BYl8sx4FfgfH43KyAGmujTY4IJdvdImrxY1FLGzTGZA7I25pYlU3bjHb++DViZ\nhzk7KgxLAV5mcnvAzPhxZ7J+kERygvGOcX6fZigYA4lYdw2CWpQKtH00iQKBgDBG\nYDR6GWn2/PaGTumtCK0Jxu8WPhKNnAPRkKUDipnfQCRUMZZ2u6Q31S9ST4PIJxbF\ndGVSMEINe/vHH1cQyF0O0UZD8lrwozjYzHafFCEgcBmC0mH8AiAMdhkmzJORlh31\nQz/oMxvjkF9u9/JXJYwEUZG26hcYqrEZm8pcMzx5AoGAGUPNWI6j8ZPFjXLTPg7d\nVSIrM5+O8qOnENcTtKK4y37300S27+WhsQai08BtozeyIS5vHeMl0MQtwnyzgc59\npzYkIrE2Z3Lx6/RHbk92S8Z03OL8mLRnyharLIep9hKXZghMCmZnBnGwjHJQe+lU\nAHms9M5qJ/sTlp7i2hijKgk=\n-----END PRIVATE KEY-----\n",
+  "client_email": "anoop-kumar@brahma-vision.iam.gserviceaccount.com",
+  "client_id": "116058658931946066337",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/anoop-kumar%40brahma-vision.iam.gserviceaccount.com"
+}
