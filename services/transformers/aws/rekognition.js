@@ -156,8 +156,8 @@ function recognize(bucketName, imageMeta){
 		}
 	  },
 	};
-	const output = './profiles/' + imageMeta.id + '.js'
-	fs.writeFileSync(output, "")			
+	const output = './analysis/' + imageMeta.id + '.json'
+	fs.writeFileSync(output, "c")			
 	if(null == profile[imageMeta.id])
 	  profile[imageMeta.id] = [];
 
@@ -176,10 +176,10 @@ function recognize(bucketName, imageMeta){
 			resolve(detectedTexts);
 		});	
 		
-		const specials = require("./specials.json")
-		Object.keys(specials).forEach(key => {
-			detect(rek, bucketName, imageMeta, output, Object.keys(specials[key])[0]);
-		});
+		//const specials = require("./specials.json")
+		//Object.keys(specials).forEach(key => {
+		//	detect(rek, bucketName, imageMeta, output, Object.keys(specials[key])[0]);
+		//});
 		
 		rek.detectFaces(details, (err, data) => {
 			if (err){
