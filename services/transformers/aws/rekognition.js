@@ -157,7 +157,7 @@ function recognize(bucketName, imageMeta){
 	  },
 	};
 	const output = './analysis/' + imageMeta.id + '.json'
-	fs.writeFileSync(output, "c")			
+	fs.writeFileSync(output, "")			
 	if(null == profile[imageMeta.id])
 	  profile[imageMeta.id] = [];
 
