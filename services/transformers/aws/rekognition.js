@@ -143,6 +143,7 @@ function detect(rek, bucketName, imageMeta, entity){
 	})		
 }
 
+var analysis = {}
 function recognize(bucketName, imageMeta, aspect){
 	var details = {
 	  Image: {
@@ -172,10 +173,15 @@ function recognize(bucketName, imageMeta, aspect){
 					reject(err);
 					return;
 				} 
-				const labels = {labels: data.Labels.map(l => l.Name)}
+				const labels = data.Labels.map(l => l.Name)
+				if(null == analysis[imageMeta.id])
+					analysis[imageMeta.id] = {}
+					
+				analysis[imageMeta.id].labels = labels
 				resolve(labels);
 			});	
 		}
+		
 		if(aspect == 'text'){			
 			rek.detectText(details, (err, data) => {
 				if (err){
@@ -191,7 +197,7 @@ function recognize(bucketName, imageMeta, aspect){
 }
 
 function saveLabeledImages(labeledImages){
-	console.log(labeledImages)
+	//console.log(labeledImages)
 }
 
 function processImages(images, bucketObjectKeys){
@@ -215,13 +221,12 @@ function processImages(images, bucketObjectKeys){
 
 function labelImages(images){
   return Promise.all(images.map(imageMeta => 
-    recognize(BUCKET_NAME, imageMeta, 'specials')
+    recognize(BUCKET_NAME, imageMeta, 'labels')
     .then(data => {
-		console.log(data, imageMeta)
-		resolve(data)
+		console.log(analysis)
+		//resolve(data)
 	}))); //return {filename: path.basename(imageMeta.filename), id: imageMeta.id, data: data.collection, value: data.data}
 }
-
 
 /*
 Create an S3 bucket if one doesn't exist
