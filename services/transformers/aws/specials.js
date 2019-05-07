@@ -1,11 +1,11 @@
 const fs = require('fs')
 var specials = require("./specials.json")
 
-learn({"anoop": {
-		"image": "anoop.jpg",
-		"relation": "Self",
-		"tags": ["Self"]
-}}) 
+//learn({"anoop": {
+//		"image": "anoop.jpg",
+//		"relation": "Self",
+//		"tags": ["Self"]
+//}}) 
 
 //forget("siddu")
 
