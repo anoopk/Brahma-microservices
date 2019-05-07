@@ -134,16 +134,24 @@ function detect(rek, bucketName, imageMeta, entity){
 				console.log(entity + " not found");
 				reject(err);
 				return;
-			}
-			
+			}	
 			if(data.FaceMatches.length){
-				resolve(true);			
+				if(null == analysis[imageMeta.id]){
+					analysis[imageMeta.id] = {}
+					analysis[imageMeta.id].specials	= []				
+				}					
+				analysis[imageMeta.id].specials.push(entity)
+				console.log(analysis)
+				resolve(data)
+				return;		
 			}			
 		});
 	})		
 }
 
 var analysis = {}
+const aspects = ['specials', 'labels', 'texts']
+
 function recognize(bucketName, imageMeta, aspect){
 	var details = {
 	  Image: {
@@ -175,8 +183,7 @@ function recognize(bucketName, imageMeta, aspect){
 				} 
 				const labels = data.Labels.map(l => l.Name)
 				if(null == analysis[imageMeta.id])
-					analysis[imageMeta.id] = {}
-					
+					analysis[imageMeta.id] = {}					
 				analysis[imageMeta.id].labels = labels
 				resolve(labels);
 			});	
@@ -189,7 +196,11 @@ function recognize(bucketName, imageMeta, aspect){
 					reject(err);
 					return;
 				} 
-				const labels = {labels: data.TextDetections.map(l => l.Name)}
+				const labels = data.TextDetections.map(l => l.Name)
+				if(null == analysis[imageMeta.id])
+					analysis[imageMeta.id] = {}					
+				analysis[imageMeta.id].texts = labels
+
 				resolve(labels);
 			});	
 		}		
@@ -221,7 +232,7 @@ function processImages(images, bucketObjectKeys){
 
 function labelImages(images){
   return Promise.all(images.map(imageMeta => 
-    recognize(BUCKET_NAME, imageMeta, 'labels')
+    recognize(BUCKET_NAME, imageMeta, 'specials')
     .then(data => {
 		console.log(analysis)
 		//resolve(data)
