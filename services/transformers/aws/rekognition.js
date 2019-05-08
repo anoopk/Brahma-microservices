@@ -2,6 +2,7 @@ const AWS = require('aws-sdk');
 const path = require("path");
 const fs = require("fs");
 
+const analysisLocal = "D:\\N15477 P13353\\D Drive\\Projects\\Samples\\brahma-microservices\\services\\transformers\\aws\\Analysis\\analysis.json"
 const BUCKET_NAME = "aggregators-dev-serverlessdeploymentbucket-pu393bpbga30"
 AWS.config.update({region:'us-east-1'});
 const features = [{image: "kohli.jpg", tags: "Virat Kohli"}, {image: "messi.jpg", tags:"Lionel Messi"}]
@@ -140,8 +141,11 @@ function detect(rek, bucketName, imageMeta, entity){
 					analysis[imageMeta.id] = {}
 					analysis[imageMeta.id].specials	= []				
 				}					
+
+				if(analysis[imageMeta.id].specials	= []){
+					analysis[imageMeta.id].specials	= []				
+				}									
 				analysis[imageMeta.id].specials.push(entity)
-				console.log(analysis)
 				resolve(data)
 				return;		
 			}			
@@ -161,53 +165,14 @@ function recognize(bucketName, imageMeta, aspect){
 		}
 	  },
 	};
-<<<<<<< HEAD
-	const output = './analysis/' + imageMeta.id + '.json'
-	fs.writeFileSync(output, "")			
-	if(null == profile[imageMeta.id])
-	  profile[imageMeta.id] = [];
-
-	const rek = new AWS.Rekognition();
-	return new Promise((resolve, reject)=>{
-		rek.detectText(details, (err, data) => {
-			if (err){
-				console.log(err, err.stack);
-				reject(err);
-				return;
-			} 
-			const detectedTexts = {detectedText: data.TextDetections.map(l => l.DetectedText)}				
-			profile[imageMeta.id].push(detectedTexts)					
-			fs.appendFileSync(output, JSON.stringify(detectedTexts))			
-			fs.appendFileSync(output, "\n")
-			resolve(detectedTexts);
-		});	
-		
-		//const specials = require("./specials.json")
-		//Object.keys(specials).forEach(key => {
-		//	detect(rek, bucketName, imageMeta, output, Object.keys(specials[key])[0]);
-		//});
-		
-		rek.detectFaces(details, (err, data) => {
-			if (err){
-				console.log(err, err.stack);
-				reject(err);
-				return;
-			} 
-			const facecount = {facecount: data.FaceDetails.length}
-			profile[imageMeta.id].push(facecount)
-			fs.appendFileSync(output, JSON.stringify(facecount))			
-			fs.appendFileSync(output, "\n")			
-			resolve(facecount);
-		});	
-=======
 	
 	const rek = new AWS.Rekognition();
 	return new Promise((resolve, reject)=>{		
 		if(aspect == 'specials'){
+			console.log(imageMeta.id, ": Analysing image for presence of other specials");
 			const specials = require("./knowledge.json").specials
 			specials.forEach(entity => {
 				detect(rek, bucketName, imageMeta, entity, (err, data) => {
-					console.log(entity)
 					if(data) resolve(true)
 				})
 			})
@@ -220,6 +185,7 @@ function recognize(bucketName, imageMeta, aspect){
 					reject(err);
 					return;
 				} 
+				console.log(imageMeta.id, ": Labeling image");
 				const labels = data.Labels.map(l => l.Name)
 				if(null == analysis[imageMeta.id])
 					analysis[imageMeta.id] = {}					
@@ -227,28 +193,23 @@ function recognize(bucketName, imageMeta, aspect){
 				resolve(labels);
 			});	
 		}
->>>>>>> 6dae2bb4c092fc8fe765657654e7169ea8091020
 		
-		if(aspect == 'text'){			
+		if(aspect == 'texts'){			
 			rek.detectText(details, (err, data) => {
 				if (err){
 					console.log(err, err.stack);
 					reject(err);
 					return;
 				} 
+				console.log(imageMeta.id, ": Performing  textdetections");
 				const labels = data.TextDetections.map(l => l.Name)
 				if(null == analysis[imageMeta.id])
 					analysis[imageMeta.id] = {}					
 				analysis[imageMeta.id].texts = labels
-
 				resolve(labels);
 			});	
 		}		
 	});  				
-}
-
-function saveLabeledImages(labeledImages){
-	//console.log(labeledImages)
 }
 
 function processImages(images, bucketObjectKeys){
@@ -271,13 +232,21 @@ function processImages(images, bucketObjectKeys){
 }
 
 function labelImages(images){
-  return Promise.all(images.map(imageMeta => 
-    recognize(BUCKET_NAME, imageMeta, 'specials')
-    .then(data => {
-		console.log(analysis)
-		//resolve(data)
-	}))); //return {filename: path.basename(imageMeta.filename), id: imageMeta.id, data: data.collection, value: data.data}
-}
+	console.log("\n",)
+  console.log("Analysis Started")
+  console.log("A local copy of the analysis is in", analysisLocal)
+  console.log("\n",)
+	
+  return Promise.all(images.map(imageMeta => {
+		Promise.all(aspects.map(aspect => 
+			recognize(BUCKET_NAME, imageMeta, aspect)
+			.then(data => {
+				fs.writeFileSync(analysisLocal, JSON.stringify(analysis))				
+				return analysis
+			})
+		))
+	})
+)}
 
 /*
 Create an S3 bucket if one doesn't exist
@@ -291,9 +260,7 @@ Promise.all([getImageMetadata(), createIfNotExistsBucket(BUCKET_NAME)]).then((re
 
   return processImages(images, bucketObjectKeys)
     .then(labelImages)
-    .then(saveLabeledImages)
     .then(_=> {
-      console.log("Done");
     });
 
 }).catch(err => {
