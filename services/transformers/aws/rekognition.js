@@ -114,7 +114,7 @@ function uploadImage(bucketName, imageBuffer, imageMeta){
   });
 }
 
-function detect(rek, bucketName, imageMeta, output, entity, label){
+function detect(rek, bucketName, imageMeta, entity){
 	return new Promise((resolve, reject)=>{
 		rek.compareFaces({
 				SourceImage: {
@@ -131,23 +131,28 @@ function detect(rek, bucketName, imageMeta, output, entity, label){
 				}  	  
 			}, (err, data) => {
 			if (err){
-				console.log(err, err.stack);
+				console.log(entity + " not found");
 				reject(err);
 				return;
-			}
-			const labels = data.FaceMatches;
+			}	
 			if(data.FaceMatches.length){
-				profile[imageMeta.id].push({contains: entity})
-				fs.appendFileSync(output, JSON.stringify({contains: entity}))			
-				fs.appendFileSync(output, "\n")							
-				console.log(`${imageMeta.id}`, 'Features ' + entity)
-			}
-			resolve(labels);
+				if(null == analysis[imageMeta.id]){
+					analysis[imageMeta.id] = {}
+					analysis[imageMeta.id].specials	= []				
+				}					
+				analysis[imageMeta.id].specials.push(entity)
+				console.log(analysis)
+				resolve(data)
+				return;		
+			}			
 		});
 	})		
 }
 
-function recognize(bucketName, imageMeta){
+var analysis = {}
+const aspects = ['specials', 'labels', 'texts']
+
+function recognize(bucketName, imageMeta, aspect){
 	var details = {
 	  Image: {
 		S3Object: {
@@ -156,6 +161,7 @@ function recognize(bucketName, imageMeta){
 		}
 	  },
 	};
+<<<<<<< HEAD
 	const output = './analysis/' + imageMeta.id + '.json'
 	fs.writeFileSync(output, "")			
 	if(null == profile[imageMeta.id])
@@ -193,33 +199,56 @@ function recognize(bucketName, imageMeta){
 			fs.appendFileSync(output, "\n")			
 			resolve(facecount);
 		});	
+=======
+	
+	const rek = new AWS.Rekognition();
+	return new Promise((resolve, reject)=>{		
+		if(aspect == 'specials'){
+			const specials = require("./knowledge.json").specials
+			specials.forEach(entity => {
+				detect(rek, bucketName, imageMeta, entity, (err, data) => {
+					console.log(entity)
+					if(data) resolve(true)
+				})
+			})
+		}
+				
+		if(aspect == 'labels'){			
+			rek.detectLabels(details, (err, data) => {
+				if (err){
+					console.log(err, err.stack);
+					reject(err);
+					return;
+				} 
+				const labels = data.Labels.map(l => l.Name)
+				if(null == analysis[imageMeta.id])
+					analysis[imageMeta.id] = {}					
+				analysis[imageMeta.id].labels = labels
+				resolve(labels);
+			});	
+		}
+>>>>>>> 6dae2bb4c092fc8fe765657654e7169ea8091020
 		
-		rek.detectLabels(details, (err, data) => {
-			if (err){
-				console.log(err, err.stack);
-				reject(err);
-				return;
-			} 
-			const labels = {labels: data.Labels.map(l => l.Name)}
-			profile[imageMeta.id].push(labels)
-			fs.appendFileSync(output, JSON.stringify(labels))			
-			fs.appendFileSync(output, "\n")
-			resolve(labels);
-		});			
+		if(aspect == 'text'){			
+			rek.detectText(details, (err, data) => {
+				if (err){
+					console.log(err, err.stack);
+					reject(err);
+					return;
+				} 
+				const labels = data.TextDetections.map(l => l.Name)
+				if(null == analysis[imageMeta.id])
+					analysis[imageMeta.id] = {}					
+				analysis[imageMeta.id].texts = labels
+
+				resolve(labels);
+			});	
+		}		
 	});  				
 }
 
 function saveLabeledImages(labeledImages){
-  return new Promise((resolve, reject) =>  {
-    fs.appendFile(path.join(__dirname, "../docs/", "labels.json"), JSON.stringify(labeledImages), (err)=>{
-      if (err){
-        console.log(err);
-        reject(err);
-      }
-
-      resolve();
-    });
-  });
+	//console.log(labeledImages)
 }
 
 function processImages(images, bucketObjectKeys){
@@ -243,16 +272,12 @@ function processImages(images, bucketObjectKeys){
 
 function labelImages(images){
   return Promise.all(images.map(imageMeta => 
-    recognize(BUCKET_NAME, imageMeta)
+    recognize(BUCKET_NAME, imageMeta, 'specials')
     .then(data => {
-		if(null == profile[imageMeta.id]){
-			profile[imageMeta.id] = [];
-		}
-		profile[imageMeta.id].push(JSON.stringify(data))
-		return profile;
+		console.log(analysis)
+		//resolve(data)
 	}))); //return {filename: path.basename(imageMeta.filename), id: imageMeta.id, data: data.collection, value: data.data}
 }
-
 
 /*
 Create an S3 bucket if one doesn't exist
@@ -266,7 +291,7 @@ Promise.all([getImageMetadata(), createIfNotExistsBucket(BUCKET_NAME)]).then((re
 
   return processImages(images, bucketObjectKeys)
     .then(labelImages)
-    //.then(saveLabeledImages)
+    .then(saveLabeledImages)
     .then(_=> {
       console.log("Done");
     });
