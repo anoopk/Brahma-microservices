@@ -236,14 +236,17 @@ function processImages(images, bucketObjectKeys){
 function labelImages(images){
   console.log("\n",)
   console.log("Analysis Started for", entity)
-  console.log("\nA local copy of the analysis is in", analysisLocal + entity + ".json")
+  console.log("\nA local copy of the analysis is in", analysisLocal + "\\" + entity + "\\analysis.json")
   console.log("\n",)
 	
   return Promise.all(images.map(imageMeta => {
 		Promise.all(aspects.map(aspect => 
 			recognize(BUCKET_NAME, imageMeta, aspect)
 			.then(data => {
-				fs.writeFileSync(analysisLocal + entity + ".json", JSON.stringify(analysis))				
+				//fs.mkdirSync(analysisLocal + "\\" + entity, { recursive: true }, (err) => {
+				//	if(err) console.log("All good")
+				//})
+				fs.writeFileSync(analysisLocal + "\\" + entity + "\\analysis.json", JSON.stringify(analysis))				
 				return analysis
 			})
 		))
