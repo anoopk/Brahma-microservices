@@ -1,12 +1,12 @@
 const AWS = require('aws-sdk');
 const path = require("path");
 const fs = require("fs");
+const config = require('./config.json').theOracle
 
-const analysisLocal = __dirname + "\\analysis\\entities\\"
+
+const analysisLocal = config.dataLocation + "\\analysis\\entities\\"
 const BUCKET_NAME = "aggregators-dev-serverlessdeploymentbucket-pu393bpbga30"
 AWS.config.update({region:'us-east-1'});
-const features = [{image: "kohli.jpg", tags: "Virat Kohli"}, {image: "messi.jpg", tags:"Lionel Messi"}]
-var profile = [];
 
 function getImageMetadata(){
   return new Promise((resolve, reject)=>{
@@ -236,7 +236,7 @@ function processImages(images, bucketObjectKeys){
 function labelImages(images){
   console.log("\n",)
   console.log("Analysis Started for", entity)
-  console.log("\nA local copy of the analysis is in", analysisLocal + "\\" + entity + "\\analysis.json")
+  console.log("\nA local copy of the analysis is in", analysisLocal + entity + "\\analysis.json")
   console.log("\n",)
 	
   return Promise.all(images.map(imageMeta => {
@@ -244,12 +244,12 @@ function labelImages(images){
 			recognize(BUCKET_NAME, imageMeta, aspect)
 			.then(data => {
 				try{
-					var err = fs.mkdirSync(analysisLocal + "\\" + entity, { recursive: true })
+					var err = fs.mkdirSync(analysisLocal + entity, { recursive: true })
 				}
 				catch (err){
 				}
 					
-				fs.writeFileSync(analysisLocal + "\\" + entity + "\\analysis.json", JSON.stringify(analysis))				
+				fs.writeFileSync(analysisLocal + entity + "\\analysis.json", JSON.stringify(analysis))				
 				return analysis
 			})
 		))
