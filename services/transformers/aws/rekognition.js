@@ -2,7 +2,7 @@ const AWS = require('aws-sdk');
 const path = require("path");
 const fs = require("fs");
 
-const analysisLocal = "D:\\N15477 P13353\\D Drive\\Projects\\Samples\\brahma-microservices\\services\\transformers\\aws\\Analysis\\analysis.json"
+const analysisLocal = "D:\\anoop\\Brahma-microservices\\services\\transformers\\aws\\analysis\\analysis.json"
 const BUCKET_NAME = "aggregators-dev-serverlessdeploymentbucket-pu393bpbga30"
 AWS.config.update({region:'us-east-1'});
 const features = [{image: "kohli.jpg", tags: "Virat Kohli"}, {image: "messi.jpg", tags:"Lionel Messi"}]
@@ -170,7 +170,7 @@ function recognize(bucketName, imageMeta, aspect){
 	return new Promise((resolve, reject)=>{		
 		if(aspect == 'specials'){
 			console.log(imageMeta.id, ": Analysing image for presence of other specials");
-			const specials = require("./knowledge.json").specials
+			const specials = require("./analysis/knowledge.json").specials
 			specials.forEach(entity => {
 				detect(rek, bucketName, imageMeta, entity, (err, data) => {
 					if(data) resolve(true)
@@ -232,9 +232,9 @@ function processImages(images, bucketObjectKeys){
 }
 
 function labelImages(images){
-	console.log("\n",)
+  console.log("\n",)
   console.log("Analysis Started")
-  console.log("A local copy of the analysis is in", analysisLocal)
+  console.log("\nA local copy of the analysis is in", analysisLocal)
   console.log("\n",)
 	
   return Promise.all(images.map(imageMeta => {
