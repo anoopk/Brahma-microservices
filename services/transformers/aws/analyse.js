@@ -1,2 +1,2 @@
 const rekognition = require('./rekognition.js');
-rekognition
+rekognition.analyse('me')

@@ -2,7 +2,7 @@ const AWS = require('aws-sdk');
 const path = require("path");
 const fs = require("fs");
 
-const analysisLocal = "D:\\anoop\\Brahma-microservices\\services\\transformers\\aws\\analysis\\analysis.json"
+const analysisLocal = __dirname + "\\analysis\\entities\\"
 const BUCKET_NAME = "aggregators-dev-serverlessdeploymentbucket-pu393bpbga30"
 AWS.config.update({region:'us-east-1'});
 const features = [{image: "kohli.jpg", tags: "Virat Kohli"}, {image: "messi.jpg", tags:"Lionel Messi"}]
@@ -171,12 +171,13 @@ function recognize(bucketName, imageMeta, aspect){
 		if(aspect == 'specials'){
 			console.log(imageMeta.id, ": Analysing image for presence of other specials");
 			const specials = require("./analysis/knowledge.json").specials
-			specials.forEach(entity => {
+			
+			Promise.all(specials.map(entity	=> {
 				detect(rek, bucketName, imageMeta, entity, (err, data) => {
 					if(data) resolve(true)
 				})
 			})
-		}
+		)}
 				
 		if(aspect == 'labels'){			
 			rek.detectLabels(details, (err, data) => {
@@ -213,6 +214,7 @@ function recognize(bucketName, imageMeta, aspect){
 }
 
 function processImages(images, bucketObjectKeys){
+  console.log(entity)
   return Promise.all(images.map((imageMeta) => new Promise((resolve, reject)=>{
 
     if (bucketObjectKeys.indexOf(imageMeta.id) >= 0){
@@ -233,15 +235,15 @@ function processImages(images, bucketObjectKeys){
 
 function labelImages(images){
   console.log("\n",)
-  console.log("Analysis Started")
-  console.log("\nA local copy of the analysis is in", analysisLocal)
+  console.log("Analysis Started for", entity)
+  console.log("\nA local copy of the analysis is in", analysisLocal + entity + ".json")
   console.log("\n",)
 	
   return Promise.all(images.map(imageMeta => {
 		Promise.all(aspects.map(aspect => 
 			recognize(BUCKET_NAME, imageMeta, aspect)
 			.then(data => {
-				fs.writeFileSync(analysisLocal, JSON.stringify(analysis))				
+				fs.writeFileSync(analysisLocal + entity + ".json", JSON.stringify(analysis))				
 				return analysis
 			})
 		))
@@ -254,15 +256,18 @@ Upload all images to the S3 bucket.
 Only upload images that don't already exist.
 Recognize labels for each image
 */
+var entity
+exports.analyse = special => {
+	entity = special
+	Promise.all([getImageMetadata(), createIfNotExistsBucket(BUCKET_NAME)]).then((results)=>{
+	  const [images, bucketObjectKeys] = results;
+	  return processImages(images, bucketObjectKeys)
+		.then(labelImages)
+		.then(_=> {
+		});
 
-Promise.all([getImageMetadata(), createIfNotExistsBucket(BUCKET_NAME)]).then((results)=>{
-  const [images, bucketObjectKeys] = results;
+	}).catch(err => {
+		console.log(err);
+	});	
+}
 
-  return processImages(images, bucketObjectKeys)
-    .then(labelImages)
-    .then(_=> {
-    });
-
-}).catch(err => {
-    console.log(err);
-});
