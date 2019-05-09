@@ -243,9 +243,12 @@ function labelImages(images){
 		Promise.all(aspects.map(aspect => 
 			recognize(BUCKET_NAME, imageMeta, aspect)
 			.then(data => {
-				//fs.mkdirSync(analysisLocal + "\\" + entity, { recursive: true }, (err) => {
-				//	if(err) console.log("All good")
-				//})
+				try{
+					var err = fs.mkdirSync(analysisLocal + "\\" + entity, { recursive: true })
+				}
+				catch (err){
+				}
+					
 				fs.writeFileSync(analysisLocal + "\\" + entity + "\\analysis.json", JSON.stringify(analysis))				
 				return analysis
 			})
