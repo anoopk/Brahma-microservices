@@ -154,7 +154,7 @@ function detect(rek, bucketName, imageMeta, entity){
 }
 
 var analysis = {}
-const aspects = ['specials', 'labels']
+const aspects = ['texts', 'labels']
 
 function recognize(bucketName, imageMeta, aspect){
 	var details = {
