@@ -4,7 +4,7 @@ const fs = require("fs");
 const config = require('./config.json').theOracle
 
 
-const analysisLocal = config.dataLocation + "\\analysis\\entities\\"
+const analysisLocal = config.dataLocation + "analysis/entities/"
 const BUCKET_NAME = "aggregators-dev-serverlessdeploymentbucket-pu393bpbga30"
 AWS.config.update({region:'us-east-1'});
 
@@ -132,29 +132,36 @@ function detect(rek, bucketName, imageMeta, entity){
 				}  	  
 			}, (err, data) => {
 			if (err){
-				console.log(entity + " not found");
-				reject(err);
+				console.log(entity + " not detected in " + imageMeta.id)
+				//reject(err);
 				return;
-			}	
+			}
+			
 			if(data.FaceMatches.length){
-				if(null == analysis[imageMeta.id]){
-					analysis[imageMeta.id] = {}
-					analysis[imageMeta.id].specials	= []				
-				}					
+							if(null == analysis[imageMeta.id]){
+								analysis[imageMeta.id] = {}
+								analysis[imageMeta.id].specials	= []				
+							}					
 
-				if(analysis[imageMeta.id].specials	= []){
-					analysis[imageMeta.id].specials	= []				
-				}									
-				analysis[imageMeta.id].specials.push(entity)
-				resolve(data)
-				return;		
-			}			
-		});
-	})		
-}
+							if(analysis[imageMeta.id].specials	= []){
+								analysis[imageMeta.id].specials	= []				
+							}									
+							analysis[imageMeta.id].specials.push(entity)
+							
+							try{
+								fs.writeFileSync(analysisLocal + entity + "/analysis.json", JSON.stringify(analysis))
+							}
+							catch(err){
+								console.log("My fault. Analysis file missing for", entity)
+							}
+							resolve(data)		
+						}				
+					});
+				})		
+			}
 
 var analysis = {}
-const aspects = ['texts', 'labels']
+const aspects = ['specials', 'texts', 'labels']
 
 function recognize(bucketName, imageMeta, aspect){
 	var details = {
@@ -170,10 +177,11 @@ function recognize(bucketName, imageMeta, aspect){
 	return new Promise((resolve, reject)=>{		
 		if(aspect == 'specials'){
 			console.log(imageMeta.id, ": Analysing image for presence of other specials");
-			const specials = require("./analysis/knowledge.json").specials
+			const specials = require(config.dataLocation + "knowledge.json").specials
 			
 			Promise.all(specials.map(entity	=> {
 				detect(rek, bucketName, imageMeta, entity, (err, data) => {
+					console.log("Specials resolved")
 					if(data) resolve(true)
 				})
 			})
@@ -214,7 +222,6 @@ function recognize(bucketName, imageMeta, aspect){
 }
 
 function processImages(images, bucketObjectKeys){
-  console.log(entity)
   return Promise.all(images.map((imageMeta) => new Promise((resolve, reject)=>{
 
     if (bucketObjectKeys.indexOf(imageMeta.id) >= 0){
@@ -236,7 +243,7 @@ function processImages(images, bucketObjectKeys){
 function labelImages(images){
   console.log("\n",)
   console.log("Analysis Started for", entity)
-  console.log("\nA local copy of the analysis is in", analysisLocal + entity + "\\analysis.json")
+  console.log("\nA local copy of the analysis is in", analysisLocal + entity + "/analysis.json")
   console.log("\n",)
 	
   return Promise.all(images.map(imageMeta => {
@@ -247,9 +254,8 @@ function labelImages(images){
 					var err = fs.mkdirSync(analysisLocal + entity, { recursive: true })
 				}
 				catch (err){
-				}
-					
-				fs.writeFileSync(analysisLocal + entity + "\\analysis.json", JSON.stringify(analysis))				
+				}	
+				fs.writeFileSync(analysisLocal + entity + "/analysis.json", JSON.stringify(analysis))				
 				return analysis
 			})
 		))
