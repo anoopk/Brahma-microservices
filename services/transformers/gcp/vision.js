@@ -26,14 +26,13 @@ async function annotate(img, option){
 		analysis[img][option] = []
 	}		
 	labels.forEach(label => analysis[img][option].push(label.description))	
-	console.log(analysis)
 }
 
 exports.analyse = async function(entity){
 	const config = require('./config.json').theOracle		
 	fs.readdirSync("images").forEach(image =>{
 		try{
-			config.aspects.map(aspect => annotate(image, aspect))
+			config.vision.aspects.map(aspect => annotate(image, aspect))
 		}
 		catch(err){
 			console.log("There are some issues with the configuration.")
