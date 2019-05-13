@@ -2,35 +2,31 @@
 const fs = require('fs')
 var analysis = require('./analysis.json')		
 		
-async function annotate(img, options){
+async function annotate(img, option){
 	const vision = require('@google-cloud/vision');
 	const client = new vision.ImageAnnotatorClient();
 
-	if(options == 'logos'){
-		console.log(img, ": analysing for logos")
-		const [result] = await client.logoDetection("images/" + img)
-		const labels = result.logoAnnotations
-		if(null == analysis[img]){
-			analysis[img] = {}
-		}			
-		if((labels.length > 0) && null == analysis[img].logos){
-			analysis[img].logos = []
-		}		
-		labels.forEach(label => analysis[img].logos.push(label.description))		
+	console.log(img, ": analysing for", option)
+	var [result] = []
+	var labels = {}
+	
+	if(option == 'logos'){		
+		[result] = await client.logoDetection("images/" + img)
+		labels = result.logoAnnotations
 	}
 	
-	if(options == 'landmarks'){
-		console.log(img, ": analysing for landmarks")
-		const [result] = await client.landmarkDetection("images/" + img)
-		const labels = result.landmarkAnnotations
-		if(null == analysis[img]){
-			analysis[img] = {}
-		}			
-		if((labels.length > 0) && null == analysis[img].options){
-			analysis[img].options = []
-		}		
-		labels.forEach(label => analysis[img].options.push(label.description))
+	if(option == 'landmarks'){
+		[result] = await client.landmarkDetection("images/" + img)
+		labels = result.landmarkAnnotations
 	}
+	if(null == analysis[img]){
+		analysis[img] = {}
+	}			
+	if((labels.length > 0) && null == analysis[img][option]){
+		analysis[img][option] = []
+	}		
+	labels.forEach(label => analysis[img][option].push(label.description))	
+	console.log(analysis)
 }
 
 exports.analyse = async function(entity){
