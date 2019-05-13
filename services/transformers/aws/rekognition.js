@@ -143,7 +143,7 @@ function detect(rek, bucketName, imageMeta, entity){
 								analysis[imageMeta.id].specials	= []				
 							}					
 
-							if(analysis[imageMeta.id].specials	= []){
+							if(entity && (analysis[imageMeta.id].specials = [])){
 								analysis[imageMeta.id].specials	= []				
 							}									
 							analysis[imageMeta.id].specials.push(entity)
@@ -179,6 +179,9 @@ function recognize(bucketName, imageMeta, aspect){
 			console.log(imageMeta.id, ": Analysing image for presence of other specials");
 			const specials = require(config.dataLocation + "knowledge.json").specials
 			
+			if(null == specials){
+				resolve(false)
+			}
 			Promise.all(specials.map(entity	=> {
 				detect(rek, bucketName, imageMeta, entity, (err, data) => {
 					console.log("Specials resolved")
@@ -198,7 +201,8 @@ function recognize(bucketName, imageMeta, aspect){
 				const labels = data.Labels.map(l => l.Name)
 				if(null == analysis[imageMeta.id])
 					analysis[imageMeta.id] = {}					
-				analysis[imageMeta.id].labels = labels
+				if(labels.length > 0)
+					analysis[imageMeta.id].labels = labels
 				resolve(labels);
 			});	
 		}
@@ -210,11 +214,12 @@ function recognize(bucketName, imageMeta, aspect){
 					reject(err);
 					return;
 				} 
-				console.log(imageMeta.id, ": Performing  textdetections");
-				const labels = data.TextDetections.map(l => l.Name)
+				
+				const labels = data.TextDetections.map(l => l.DetectedText)
 				if(null == analysis[imageMeta.id])
-					analysis[imageMeta.id] = {}					
-				analysis[imageMeta.id].texts = labels
+					analysis[imageMeta.id] = {}
+				if(labels.length)
+					analysis[imageMeta.id].texts = labels
 				resolve(labels);
 			});	
 		}		
