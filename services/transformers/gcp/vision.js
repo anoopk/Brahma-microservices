@@ -10,7 +10,6 @@ async function annotate(img, options){
 		console.log(img, ": analysing for logos")
 		const [result] = await client.logoDetection("images/" + img)
 		const labels = result.logoAnnotations
-		labels.forEach(label => console.log(label))
 		if(null == analysis[img]){
 			analysis[img] = {}
 		}			
@@ -20,18 +19,17 @@ async function annotate(img, options){
 		labels.forEach(label => analysis[img].logos.push(label.description))		
 	}
 	
-	if(options == 'landmark'){
+	if(options == 'landmarks'){
 		console.log(img, ": analysing for landmarks")
 		const [result] = await client.landmarkDetection("images/" + img)
 		const labels = result.landmarkAnnotations
 		if(null == analysis[img]){
 			analysis[img] = {}
 		}			
-		if((labels.length > 0) && null == analysis[img].landmarks){
-			analysis[img].landmarks = []
+		if((labels.length > 0) && null == analysis[img].options){
+			analysis[img].options = []
 		}		
-		labels.forEach(label => analysis[img].landmarks.push(label.description))
-		console.log(analysis)
+		labels.forEach(label => analysis[img].options.push(label.description))
 	}
 }
 
