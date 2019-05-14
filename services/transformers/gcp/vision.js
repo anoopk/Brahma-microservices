@@ -1,6 +1,6 @@
 'use strict';
 const fs = require('fs')
-const config = require('./config.json').theOracle
+const config = require('./config.json').pecfy
 		
 async function annotate(entity, img, aspect){
 	const vision = require('@google-cloud/vision');
@@ -37,7 +37,7 @@ async function annotate(entity, img, aspect){
 }
 
 exports.analyse = async function(entity){
-	const config = require('./config.json').theOracle		
+	const config = require('./config.json').pecfy
 	fs.readdirSync("images/" + entity).forEach(image =>{
 		try{
 			config.vision.aspects.map(aspect =>	annotate(entity, image, aspect))

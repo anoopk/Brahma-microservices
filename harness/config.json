@@ -1,0 +1,72 @@
+{
+	"services": {
+		"readers": {
+			"url": "input/inputUrlList.txt",
+			"urlWithMetadata": "input/inputUrlList.txt"
+		},	
+		"transformers":
+		{
+			"transform": {
+				"url": "https://www.autoexpress.co.uk/hyundai/i10/88290/hyundai-i10-se-long-term-test-review",
+				"organization": "Hyundai",
+				"product": "i10"
+			},
+			"strangedesigns": {
+				"serviceproviders": {
+				"credentials": {
+				"application_id": "3e37c5de",
+				"application_key": "69a0c0f40f7137b9e51eed2f06df37b9"
+				}
+			},
+				"watch": {
+					"organization": [
+					"Maruti",
+					"Hyundai"
+					],
+					"product": [
+						"Wagon R",
+						"i10",
+						"i20"
+					]
+				},
+				"organization": "Maruti",
+				"product": "WagonR"
+			},
+			"lambdaPath": "../services/transformers/sd",
+			"lambdaImport": true,
+			"message": "Aylienization complete."				  
+		},
+		"aggregators": {
+			"strangedesigns": {
+				"url": "mongodb://anoop:Rucksa0k@cluster0-shard-00-00-tcllz.mongodb.net:27017,cluster0-shard-00-01-tcllz.mongodb.net:27017,cluster0-shard-00-02-tcllz.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true"
+			},
+			"sentiment":{
+				"lambdaPath": "../services/aggregators/sentiment/sd",
+				"lambdaLocal": true,
+				"message": "Sentiments extracted"	
+			},
+			"aspect":{
+				"lambdaPath": "../services/aggregators/aspect/sd",
+				"lambdaLocal": true,
+				"message": "Aspects extracted"	
+			}		
+		},
+		"storers": {		
+			"mongodb": {
+				"url": "mongodb://anoop:Rucksa0k@cluster0-shard-00-00-tcllz.mongodb.net:27017,cluster0-shard-00-01-tcllz.mongodb.net:27017,cluster0-shard-00-02-tcllz.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true",
+				"databases":{
+					"analysis": "Analysis",
+					"wiki":"Wiki",
+					"aggregate": "Statistics"
+				},
+				"lambdaPath": "../services/storers/mongo",
+				"lambdaLocal": true,
+				"message": "Mongoisation complete."	
+			},
+			"logger": {
+				"filename": "mongo_db.data",
+				"append": false
+			}
+		}
+	}
+}

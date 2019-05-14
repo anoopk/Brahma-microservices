@@ -1,7 +1,7 @@
 const AWS = require('aws-sdk');
 const path = require("path");
 const fs = require("fs");
-const config = require('./config.json').theOracle
+const config = require('./config.json').pecfy
 
 
 const analysisLocal = config.dataLocation + "analysis/entities/"
