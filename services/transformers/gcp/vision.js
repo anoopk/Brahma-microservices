@@ -1,38 +1,46 @@
 'use strict';
 const fs = require('fs')
-var analysis = require('./analysis.json')		
+const config = require('./config.json').theOracle
 		
-async function annotate(img, option){
+async function annotate(entity, img, aspect){
 	const vision = require('@google-cloud/vision');
 	const client = new vision.ImageAnnotatorClient();
 
-	console.log(img, ": analysing for", option)
+	console.log(img, ": analysing for", aspect)
 	var [result] = []
 	var labels = {}
 	
-	if(option == 'logos'){		
-		[result] = await client.logoDetection("images/" + img)
+	if(aspect == 'logos'){		
+		[result] = await client.logoDetection("images/" + entity + '/' + img)
 		labels = result.logoAnnotations
 	}
 	
-	if(option == 'landmarks'){
-		[result] = await client.landmarkDetection("images/" + img)
+	if(aspect == 'landmarks'){
+		[result] = await client.landmarkDetection("images/" + entity + '/' + img)
 		labels = result.landmarkAnnotations
 	}
+
+	var analysis = require(config.dataLocation + 'analysis/entities/' + entity + '/analysis.json')
 	if(null == analysis[img]){
 		analysis[img] = {}
 	}			
-	if((labels.length > 0) && null == analysis[img][option]){
-		analysis[img][option] = []
+	if((labels.length > 0) && null == analysis[img][aspect]){
+		analysis[img][aspect] = []
 	}		
-	labels.forEach(label => analysis[img][option].push(label.description))	
+	labels.forEach(label => analysis[img][aspect].push(label.description))	
+	try{
+		fs.writeFileSync(config.dataLocation + 'analysis/entities/' + entity + '/analysis.json', JSON.stringify(analysis))
+	}
+	catch(err){
+		console.log("Issue with config")
+	}
 }
 
 exports.analyse = async function(entity){
 	const config = require('./config.json').theOracle		
-	fs.readdirSync("images").forEach(image =>{
+	fs.readdirSync("images/" + entity).forEach(image =>{
 		try{
-			config.vision.aspects.map(aspect => annotate(image, aspect))
+			config.vision.aspects.map(aspect =>	annotate(entity, image, aspect))
 		}
 		catch(err){
 			console.log("There are some issues with the configuration.")
