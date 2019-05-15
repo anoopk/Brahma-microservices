@@ -160,8 +160,6 @@ function detect(rek, bucketName, imageMeta, entity){
 				})		
 			}
 
-var analysis = {}
-
 function recognize(bucketName, imageMeta, aspect){
 	var details = {
 	  Image: {
@@ -198,10 +196,14 @@ function recognize(bucketName, imageMeta, aspect){
 				} 
 				console.log(imageMeta.id, ": Labeling image");
 				const labels = data.Labels.map(l => l.Name)
+				
 				if(null == analysis[imageMeta.id])
+				{
 					analysis[imageMeta.id] = {}					
-				if(labels.length > 0)
+				}
+				if(labels.length > 0){
 					analysis[imageMeta.id].labels = labels
+				}
 				resolve(labels);
 			});	
 		}
@@ -217,8 +219,9 @@ function recognize(bucketName, imageMeta, aspect){
 				const labels = data.TextDetections.map(l => l.DetectedText)
 				if(null == analysis[imageMeta.id])
 					analysis[imageMeta.id] = {}
-				if(labels.length)
+				if(labels.length){
 					analysis[imageMeta.id].texts = labels
+				}
 				resolve(labels);
 			});	
 		}		
@@ -273,8 +276,10 @@ Only upload images that don't already exist.
 Recognize labels for each image
 */
 var entity
+var analysis = {}
 exports.analyse = special => {
 	entity = special
+	var analysis = require(analysisLocal + entity + "/analysis.json")	
 	Promise.all([getImageMetadata(), createIfNotExistsBucket(BUCKET_NAME)]).then((results)=>{
 	  const [images, bucketObjectKeys] = results;
 	  return processImages(images, bucketObjectKeys)
