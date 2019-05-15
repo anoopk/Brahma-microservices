@@ -161,7 +161,6 @@ function detect(rek, bucketName, imageMeta, entity){
 			}
 
 var analysis = {}
-const aspects = ['specials', 'texts', 'labels']
 
 function recognize(bucketName, imageMeta, aspect){
 	var details = {
@@ -252,7 +251,7 @@ function labelImages(images){
   console.log("\n",)
 	
   return Promise.all(images.map(imageMeta => {
-		Promise.all(aspects.map(aspect => 
+		Promise.all(config.rekognition.aspects.map(aspect => 
 			recognize(BUCKET_NAME, imageMeta, aspect)
 			.then(data => {
 				try{
