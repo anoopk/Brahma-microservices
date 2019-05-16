@@ -9,10 +9,16 @@ async function annotate(entity, img, aspect){
 	console.log(img, ": analysing for", aspect)
 	var [result] = []
 	var labels = {}
+	var safe = false
 	
 	if(aspect == 'logos'){		
 		[result] = await client.logoDetection("images/" + entity + '/' + img)
 		labels = result.logoAnnotations
+	}
+
+	if(aspect == 'objects'){
+		[result] = await client.objectLocalization("images/" + entity + '/' + img)
+		labels = result.localizedObjectAnnotations
 	}
 	
 	if(aspect == 'landmarks'){
@@ -20,14 +26,36 @@ async function annotate(entity, img, aspect){
 		labels = result.landmarkAnnotations
 	}
 
+	if(aspect == 'safeSearch'){
+		[result] = await client.safeSearchDetection("images/" + entity + '/' + img)
+		safe = ((result.safeSearchAnnotation.adult == 'VERY_UNLIKELY' || result.safeSearchAnnotation.adult == 'UNLIKELY') &&
+				(result.safeSearchAnnotation.racy == 'VERY_UNLIKELY' || result.safeSearchAnnotation.racy == 'UNLIKELY') &&
+				(result.safeSearchAnnotation.violence == 'VERY_UNLIKELY' || result.safeSearchAnnotation.violence == 'UNLIKELY'))
+			? true : false
+			if(safe == false)
+				console.log(img, "found to be unsafe", result.safeSearchAnnotation)		
+	}
+	
 	var analysis = require(config.dataLocation + 'analysis/entities/' + entity + '/analysis.json')
 	if(null == analysis[img]){
 		analysis[img] = {}
-	}			
+	}		
+	
 	if((labels.length > 0) && null == analysis[img][aspect]){
 		analysis[img][aspect] = []
 	}		
-	labels.forEach(label => analysis[img][aspect].push(label.description))	
+	
+	if(aspect == 'safeSearch'){
+		if(null == analysis[img][aspect])
+			analysis[img][aspect] = []
+		
+		analysis[img][aspect] = safe
+	}
+	else{
+		console.log(labels, aspect)
+		//labels.forEach(label => analysis[img][aspect].push(label.description))	
+	}
+	
 	try{
 		fs.writeFileSync(config.dataLocation + 'analysis/entities/' + entity + '/analysis.json', JSON.stringify(analysis))
 	}

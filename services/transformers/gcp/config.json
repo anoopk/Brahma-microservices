@@ -2,6 +2,7 @@
 	"pecfy" :{
 		"dataLocation": "D:/N15477 P13353/D Drive/Projects/Samples/theOracle/data/",
 		"vision":  {"aspects": ["landmarks", "logos"]},
-		"rekognition":  {"aspects": ["labels", "texts", "specials"]}
+		"rekognition":  {"aspects": ["labels", "texts", "specials"]},
+		"vision": {"aspects": ["landmark", "logos"]}
 	}
 }
