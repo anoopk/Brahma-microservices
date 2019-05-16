@@ -41,7 +41,7 @@ async function annotate(entity, img, aspect){
 		analysis[img] = {}
 	}		
 	
-	if((labels.length > 0) && null == analysis[img][aspect]){
+	if(labels.length > 0){
 		analysis[img][aspect] = []
 	}		
 	
