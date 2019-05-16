@@ -52,8 +52,7 @@ async function annotate(entity, img, aspect){
 		analysis[img][aspect] = safe
 	}
 	else{
-		console.log(labels, aspect)
-		//labels.forEach(label => analysis[img][aspect].push(label.description))	
+		labels.forEach(label => analysis[img][aspect].push(label.description))	
 	}
 	
 	try{
