@@ -11,7 +11,7 @@ AWS.config.update({region:'us-east-1'});
 function getImageMetadata(){
   return new Promise((resolve, reject)=>{
 
-    const imagesPath = path.join(__dirname, "../aws/Images/" + entity);
+    const imagesPath = path.join(__dirname, "../Images/" + entity);
     console.log(`Reading images from ${imagesPath}`);
 
     fs.readdir(imagesPath, function(err, items) {  
