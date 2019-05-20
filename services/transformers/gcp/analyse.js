@@ -1,2 +1,2 @@
 const vision = require('./vision.js');
-vision.analyse("me")
+vision.analyse("kohli")

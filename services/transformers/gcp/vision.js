@@ -16,6 +16,11 @@ async function annotate(entity, img, aspect){
 		labels = result.logoAnnotations
 	}
 
+	if(aspect == 'texts'){		
+		[result] = await client.textDetection("images/" + entity + '/' + img)
+		labels = result.textAnnotations
+	}
+	
 	if(aspect == 'objects'){
 		[result] = await client.objectLocalization("images/" + entity + '/' + img)
 		labels = result.localizedObjectAnnotations
