@@ -3,6 +3,7 @@ const fs = require('fs')
 const config = require('./config.json').pecfy
 		
 async function annotate(entity, img, aspect){
+	img = img.toLowerCase()
 	const vision = require('@google-cloud/vision');
 	const client = new vision.ImageAnnotatorClient();
 
