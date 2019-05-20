@@ -13,27 +13,27 @@ async function annotate(entity, img, aspect){
 	var safe = false
 	
 	if(aspect == 'logos'){		
-		[result] = await client.logoDetection("images/" + entity + '/' + img)
+		[result] = await client.logoDetection("../images/" + entity + '/' + img)
 		labels = result.logoAnnotations
 	}
 
 	if(aspect == 'texts'){		
-		[result] = await client.textDetection("images/" + entity + '/' + img)
+		[result] = await client.textDetection("../images/" + entity + '/' + img)
 		labels = result.textAnnotations
 	}
 	
 	if(aspect == 'objects'){
-		[result] = await client.objectLocalization("images/" + entity + '/' + img)
+		[result] = await client.objectLocalization("../images/" + entity + '/' + img)
 		labels = result.localizedObjectAnnotations
 	}
 	
 	if(aspect == 'landmarks'){
-		[result] = await client.landmarkDetection("images/" + entity + '/' + img)
+		[result] = await client.landmarkDetection("../images/" + entity + '/' + img)
 		labels = result.landmarkAnnotations
 	}
 
 	if(aspect == 'safeSearch'){
-		[result] = await client.safeSearchDetection("images/" + entity + '/' + img)
+		[result] = await client.safeSearchDetection("../images/" + entity + '/' + img)
 		safe = ((result.safeSearchAnnotation.adult == 'VERY_UNLIKELY' || result.safeSearchAnnotation.adult == 'UNLIKELY') &&
 				(result.safeSearchAnnotation.racy == 'VERY_UNLIKELY' || result.safeSearchAnnotation.racy == 'UNLIKELY') &&
 				(result.safeSearchAnnotation.violence == 'VERY_UNLIKELY' || result.safeSearchAnnotation.violence == 'UNLIKELY'))
@@ -71,7 +71,7 @@ async function annotate(entity, img, aspect){
 
 exports.analyse = async function(entity){
 	const config = require('./config.json').pecfy
-	fs.readdirSync("images/" + entity).forEach(image =>{
+	fs.readdirSync("../images/" + entity).forEach(image =>{
 		try{
 			config.vision.aspects.map(aspect =>	annotate(entity, image, aspect))
 		}
